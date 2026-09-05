@@ -1,0 +1,18 @@
+{
+  "name": "Cafetería · El Rey Jesús Oviedo",
+  "short_name": "Cafetería",
+  "description": "Comandas, caja y resúmenes de la cafetería de la iglesia. Desarrollada por Bernardo Santos, sin ánimo de lucro.",
+  "author": "Bernardo Santos",
+  "start_url": "./cafeteria.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#031329",
+  "theme_color": "#031329",
+  "lang": "es",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
