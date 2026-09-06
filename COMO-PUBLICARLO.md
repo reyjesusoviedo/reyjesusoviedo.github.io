@@ -15,7 +15,10 @@ Sube estos diecinueve, todos juntos y sin cambiarles el nombre:
 | `icon-192.png` · `icon-512.png` · `icon-maskable.png` | El logo de la iglesia. |
 | `foto-1.jpg` … `foto-4.jpg` | La galería de la portada. Admite hasta `foto-8.jpg`. |
 | `fondo-1.jpg` · `fondo-2.jpg` | Las fotos del encabezado. |
-| `pastores.jpg` | La imagen de la sección de pastores. |
+| `pastores-foto.jpg` | Foto de los pastores. Si no existe, sale el logo. |
+| `sede-oviedo.jpg` · `sede-gijon.jpg` · `sede-la-felguera.jpg` · `sede-grado.jpg` · `sede-cangas-de-onis.jpg` | Imagen de cada sede en su carrusel. |
+| `reunion-culto-general.jpg` · `reunion-culto-de-oracion.jpg` · `reunion-reunion-general.jpg` | Carteles de las reuniones semanales. |
+| `evento-1.jpg` · `evento-2.jpg` · `evento-3.jpg` | Carteles de los eventos. El 2 y el 3 son de relleno: cámbialos por los vuestros. |
 | `guia.html` | La guía para presentar a los líderes. |
 | `bienvenida.html` | Lo que ve quien escanea un cartel. |
 | `tarjeta.html` | La tarjeta pública de cada líder. |
@@ -132,6 +135,36 @@ Ahora que los QR llevan a la página, entra en **Imprimir** y saca:
 - Las tarjetas de 85 por 55 para tablones y mostradores.
 
 ---
+
+## Poner un evento
+
+En la web, toca **tres veces el logo** de la barra de arriba: se abre el editor.
+Baja hasta *Eventos* y pulsa **Añadir evento**. Rellena el título, las fechas, la
+sede y, si tienes cartel, escribe el nombre del archivo, por ejemplo `evento-2.jpg`.
+
+Pulsa **Ver cambios** para comprobarlo, luego **Descargar index.html**, y sube ese
+archivo junto con el cartel.
+
+Se muestran hasta tres eventos en un carrusel, con el más próximo en el centro.
+Los pasados desaparecen solos al llegar la fecha.
+
+Los carteles se cambian subiendo una imagen con el mismo nombre, sin tocar nada más.
+Recórtalos verticales, tres de ancho por cuatro de alto, a unos 800 píxeles.
+
+Cada tarjeta tiene dos botones: *Quiero ir*, que abre WhatsApp, y *Compartir*.
+
+## Poner los horarios de una sede
+
+Tres toques en el logo, baja hasta *Sedes*, y en el campo de horarios escribe una
+línea por reunión con este formato:
+
+```
+Culto general | domingo 11:00 | reunion-culto-general.jpg
+```
+
+Nombre, día y hora, y el cartel. El cartel es opcional. De ahí salen la franja
+azul de horarios, el aviso de la próxima reunión y los horarios de cada tarjeta
+de sede.
 
 ## Cambiar las fotos de la web
 
