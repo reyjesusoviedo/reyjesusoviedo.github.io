@@ -81,6 +81,7 @@ p{margin:0 0 14px}
   letter-spacing:0;text-transform:none}
 @media(max-width:600px){.franja h2{font-size:26px}.franja{padding:32px 18px 30px}}
 .horas{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.horas.sola{grid-template-columns:minmax(0,340px);justify-content:center}
 .hcard{position:relative;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.09);
   min-height:290px;display:flex;align-items:flex-end;isolation:isolate}
 .hcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
@@ -546,11 +547,11 @@ function pintaSemana(){
   }).join("");
   sec.innerHTML='<div class="franja"><div class="dentro">'+
     '<div class="cab"><div class="et">Cada semana</div><h2>Nos reunimos aquí</h2></div>'+
-    (tarjetas?'<div class="horas">'+tarjetas+
-      '<button class="hcard cta" onclick="preguntaSede(\''+esc(s.n).replace(/'/g,"")+'\')">'+
-      '<b>¿Vienes?</b><span>Escríbenos y te esperamos</span></button></div>'
-     :'<p class="sinhoras">Todavía no hemos publicado los horarios de '+esc(s.n)+
+    (tarjetas?"":'<p class="sinhoras">Todavía no hemos publicado los horarios de '+esc(s.n)+
       '. Escríbenos y te los decimos.</p>')+
+    '<div class="horas'+(tarjetas?"":" sola")+'">'+tarjetas+
+      '<button class="hcard cta" onclick="preguntaSede(\''+esc(s.n).replace(/'/g,"")+'\')">'+
+      '<b>¿Vienes?</b><span>Escríbenos y te esperamos</span></button></div>'+
     '<div class="pastillas" id="pastSedes">'+SEDES.map((x,i)=>
       '<button data-ss="'+i+'"'+(i===sedeSem?' aria-current="true"':'')+'>'+esc(x.n)+'</button>').join("")+
     '</div></div></div>';
