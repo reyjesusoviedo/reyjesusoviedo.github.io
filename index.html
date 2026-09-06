@@ -203,6 +203,20 @@ p{margin:0 0 14px}
 .ir{display:inline-block;margin-top:11px;font-size:14.5px;color:var(--blue);text-decoration:none;
   border:1px solid var(--line2);border-radius:99px;padding:6px 15px}
 
+.dones{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-top:20px}
+.don{border:1px solid var(--line);border-radius:15px;padding:18px 20px;background:#fff;
+  display:flex;flex-direction:column}
+.don .et{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.don h4{font-size:19px;font-weight:600;color:var(--navy);margin:4px 0 8px}
+.don .dato{font-size:19px;font-weight:600;color:var(--navy);letter-spacing:.02em;
+  word-break:break-all;line-height:1.35}
+.don .sub{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.45}
+.don .bt{margin-top:auto;padding-top:14px}
+.don button,.don a.bpago{width:100%;display:block;text-align:center;text-decoration:none;
+  border:1px solid var(--line2);background:#fff;color:var(--navy);border-radius:11px;
+  padding:12px;font-size:14.5px;font-weight:500;cursor:pointer;font-family:inherit}
+.don a.bpago{background:var(--blue);color:#fff;border-color:var(--blue)}
+.dnota{font-size:13.5px;color:var(--muted);margin-top:16px}
 .form{background:var(--ice2);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:8px}
 label{display:block;font-size:12px;color:var(--soft);margin:12px 0 5px;letter-spacing:.04em}
 input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
@@ -267,6 +281,7 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   <div class="links">
     <a href="#semana">Horarios</a>
     <a href="#agenda" id="navAgenda" hidden>Agenda</a>
+    <a href="#donativos" id="navDon" hidden>Colabora</a>
     <a href="#quienes">Quiénes somos</a>
     <a href="#donde">Dónde estamos</a>
     <a href="#esperar">Tu primera visita</a>
@@ -318,6 +333,14 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   <h3 id="tEsperarTit"></h3>
   <p id="tEsperar1"></p>
   <p id="tEsperar2"></p>
+</section>
+
+<section id="donativos" hidden>
+  <h2>Colabora</h2>
+  <h3 id="dTitulo"></h3>
+  <p id="dTexto"></p>
+  <div class="dones" id="dones"></div>
+  <p class="dnota" id="dNota"></p>
 </section>
 
 <section id="contacto">
@@ -380,6 +403,15 @@ const DATOS={
   "direccion":"Calle Jardín 12, 33011 Oviedo",
   "instagram":"https://instagram.com/migrreyjesusasturias",
   "facebook":"https://www.facebook.com/search/top?q=Migr%20rey%20Jes%C3%BAs%20asturias",
+  "donativos":{
+    "titulo":"Ofrendas y donativos",
+    "texto":"Todo lo que se recibe sostiene la obra de la iglesia: el local, las actividades y la ayuda a quien lo necesita. Cada aportación es voluntaria.",
+    "bizum":"",
+    "iban":"",
+    "titular":"Ministerio Internacional Gloria Revelada",
+    "tarjeta":"",
+    "nota":"Si necesitas justificante de tu donativo, escríbenos y te lo preparamos."
+  },
   "eventos":[
     {"id":"e1","titulo":"Conferencia Gloria Postrera","desde":"2026-10-23","hasta":"2026-10-24",
      "hora":"","sede":"Oviedo","quien":"Anfitriones: Pr. Genilson Santiago y Prª Taiala Santiago · Invitados: Apóst. Dublas Rodríguez y Profet. Jessica Rodríguez",
@@ -452,6 +484,36 @@ function distintivo(e){
   if(d<=45)return "en "+d+" días";
   return "";
 }
+function pintaDonativos(){
+  const o=DATOS.donativos||{};
+  const hay=(o.bizum||o.iban||o.tarjeta);
+  $("donativos").hidden=!hay;
+  $("navDon").hidden=!hay;
+  if(!hay)return;
+  $("dTitulo").textContent=o.titulo||"Ofrendas y donativos";
+  $("dTexto").textContent=o.texto||"";
+  $("dNota").textContent=o.nota||"";
+  let c="";
+  if(o.bizum)c+='<article class="don"><div class="et">Bizum</div><h4>Desde el móvil</h4>'+
+    '<div class="dato">'+esc(o.bizum)+'</div>'+
+    '<div class="sub">Abre tu banco, elige Bizum y envía a ese número.</div>'+
+    '<div class="bt"><button data-copia="'+esc(o.bizum.replace(/\s/g,""))+'">Copiar el número</button></div></article>';
+  if(o.iban)c+='<article class="don"><div class="et">Transferencia</div><h4>Desde tu banco</h4>'+
+    '<div class="dato">'+esc(o.iban)+'</div>'+
+    '<div class="sub">'+esc(o.titular||"")+'</div>'+
+    '<div class="bt"><button data-copia="'+esc(o.iban.replace(/\s/g,""))+'">Copiar el número</button></div></article>';
+  if(o.tarjeta)c+='<article class="don"><div class="et">Tarjeta</div><h4>Pago seguro</h4>'+
+    '<div class="sub" style="margin-top:0">Se abre la pasarela de pago. Los datos de tu tarjeta '+
+    'no pasan por esta web.</div>'+
+    '<div class="bt"><a class="bpago" href="'+esc(o.tarjeta)+'" target="_blank" rel="noopener">Donar con tarjeta</a></div></article>';
+  $("dones").innerHTML=c;
+  $("dones").onclick=e=>{
+    const b=e.target.closest("[data-copia]"); if(!b)return;
+    try{navigator.clipboard.writeText(b.dataset.copia)}catch(x){}
+    const t=b.textContent; b.textContent="Copiado";
+    setTimeout(()=>{try{b.textContent=t}catch(x){}},1600);
+  };
+}
 function pintaEventos(){
   const fs=futuros().slice(0,3);
   const dest=$("destacado"), ag=$("agenda"), nav=$("navAgenda");
@@ -516,7 +578,7 @@ function pinta(){
   $("tIg").href=DATOS.instagram; $("tFb").href=DATOS.facebook;
   $("tIg").style.display=DATOS.instagram?"":"none";
   $("tFb").style.display=DATOS.facebook?"":"none";
-  pintaSemana(); pintaSedes(); pintaProxima(); pintaEventos(); fotoPastores();
+  pintaSemana(); pintaSedes(); pintaProxima(); pintaEventos(); pintaDonativos(); fotoPastores();
 }
 let sedeSem=0;
 function pintaSemana(){
@@ -732,6 +794,14 @@ function abreEditor(){
     '<p style="font-size:13.5px;color:#7d97a8">Cambia lo que quieras, pulsa <b>Ver cambios</b> '+
     'para comprobarlo, y luego <b>Descargar index.html</b> y súbelo a GitHub.</p>'+
     '<div class="edcampos">'+c+'<h4 style="margin-top:18px">Sedes</h4>'+sd+
+      '<h4 style="margin-top:18px">Colabora</h4>'+
+      '<p style="font-size:13px;color:#7d97a8;margin:0">Deja los tres en blanco y la sección no aparece.</p>'+
+      '<label for="do_b">Número de Bizum</label><input type="text" id="do_b" value="'+esc((DATOS.donativos||{}).bizum||"")+'" placeholder="629 79 38 00">'+
+      '<label for="do_i">IBAN de la iglesia</label><input type="text" id="do_i" value="'+esc((DATOS.donativos||{}).iban||"")+'" placeholder="ES00 0000 0000 0000 0000 0000">'+
+      '<label for="do_ti">Titular de la cuenta</label><input type="text" id="do_ti" value="'+esc((DATOS.donativos||{}).titular||"")+'">'+
+      '<label for="do_t">Enlace de pago con tarjeta</label><input type="text" id="do_t" value="'+esc((DATOS.donativos||{}).tarjeta||"")+'" placeholder="https://buy.stripe.com/…">'+
+      '<label for="do_x">Texto de la sección</label><textarea id="do_x" rows="3">'+esc((DATOS.donativos||{}).texto||"")+'</textarea>'+
+      '<label for="do_n">Nota final</label><input type="text" id="do_n" value="'+esc((DATOS.donativos||{}).nota||"")+'">'+
       '<h4 style="margin-top:18px">Eventos</h4><div id="edEventos">'+pintaEdEventos()+'</div>'+
       '<button id="edNuevoEv" class="edmas">Añadir evento</button></div>'+
     '<div class="edbotones"><button id="edVer">Ver cambios</button>'+
@@ -790,6 +860,15 @@ function recoge(){
     const v=$("ed_"+f[0]).value;
     DATOS[f[0]]=f[2]==="lista"?v.split("\n").map(x=>x.trim()).filter(Boolean):v.trim();
   });
+  DATOS.donativos=DATOS.donativos||{};
+  if($("do_b")){
+    DATOS.donativos.bizum=$("do_b").value.trim();
+    DATOS.donativos.iban=$("do_i").value.trim().toUpperCase();
+    DATOS.donativos.titular=$("do_ti").value.trim();
+    DATOS.donativos.tarjeta=$("do_t").value.trim();
+    DATOS.donativos.texto=$("do_x").value.trim();
+    DATOS.donativos.nota=$("do_n").value.trim();
+  }
   (DATOS.eventos||[]).forEach((e,i)=>{
     if(!$("ev_t"+i))return;
     e.titulo=$("ev_t"+i).value.trim();
