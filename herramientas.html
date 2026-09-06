@@ -30,6 +30,10 @@ button{font:inherit;cursor:pointer}
   border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:7px 15px}
 
 main{max-width:900px;margin:0 auto;padding:22px 20px 60px}
+.novedades{background:#e2efe6;border:1px solid #b6d8c1;border-radius:12px;
+  padding:12px 15px;font-size:14px;color:#245c3b;margin-bottom:20px;line-height:1.55}
+.novedades b{color:#1d4d31}
+.novedades .f{color:#5d8a70;font-size:12.5px}
 .aviso{background:#fdf6e8;border:1px solid #f0dcb8;border-radius:12px;
   padding:13px 16px;font-size:14px;color:#7a4d0a;margin-bottom:22px}
 h2{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);
@@ -209,17 +213,17 @@ function qrSVG(txt,px){
 }
 const GRUPOS=[
   {t:"Para el equipo",h:[
-    {f:"app.html",n:"Tarjetas y QR",d:"Tu tarjeta de visita, el código para entregar el contacto en segundos, la bienvenida y la lista de quién vas conociendo.",q:"Cada líder",v:"1.0",i:true},
-    {f:"agenda-sedes.html",n:"Agenda de sedes",d:"Quién dirige cada reunión, en qué sede y qué día. Cuadrante de cuatro semanas y avisos por WhatsApp.",q:"Pastores y responsables",v:"1.0",i:true},
-    {f:"guia.html",n:"Guía de la aplicación",d:"Cómo funciona Tarjetas y QR, pantalla por pantalla, con los primeros pasos y las dudas más frecuentes.",q:"Para la reunión de líderes",v:"1.0",i:false}
+    {f:"app.html",n:"Tarjetas y QR",d:"Tu tarjeta de visita, el código para entregar el contacto en segundos, la bienvenida y la lista de quién vas conociendo.",q:"Cada líder",k:"app",i:true},
+    {f:"agenda-sedes.html",n:"Agenda de sedes",d:"Quién dirige cada reunión, en qué sede y qué día. Cuadrante de cuatro semanas y avisos por WhatsApp.",q:"Pastores y responsables",k:"agenda",i:true},
+    {f:"guia.html",n:"Guía de la aplicación",d:"Cómo funciona Tarjetas y QR, pantalla por pantalla, con los primeros pasos y las dudas más frecuentes.",q:"Para la reunión de líderes",i:false}
   ]},
   {t:"Para la cafetería",h:[
-    {f:"cafeteria.html",n:"Cafetería",d:"Comandas, caja y cierre del día. Pensada para la tablet de la barra, apaisada.",q:"Solo la tablet de Oviedo",v:"1.0",i:true}
+    {f:"cafeteria.html",n:"Cafetería",d:"Comandas, caja y cierre del día. Pensada para la tablet de la barra, apaisada.",q:"Solo la tablet de Oviedo",k:"cafeteria",i:true}
   ]},
   {t:"Páginas públicas",h:[
-    {f:"index.html",n:"Web de la iglesia",d:"La cara pública: quiénes somos, las cinco sedes con horarios y el contacto.",q:"Cualquiera",v:"1.0",i:false},
-    {f:"bienvenida.html",n:"Bienvenida",d:"Lo que ve quien escanea un cartel por la calle. Se genera desde Tarjetas y QR.",q:"Visitantes",v:"1.0",i:false},
-    {f:"tarjeta.html",n:"Tarjetas públicas",d:"La ficha de cada líder con sus botones de llamar, escribir y llegar. Se genera desde Tarjetas y QR.",q:"Visitantes",v:"1.0",i:false}
+    {f:"index.html",n:"Web de la iglesia",d:"La cara pública: quiénes somos, las cinco sedes con horarios y el contacto.",q:"Cualquiera",i:false},
+    {f:"bienvenida.html",n:"Bienvenida",d:"Lo que ve quien escanea un cartel por la calle. Se genera desde Tarjetas y QR.",q:"Visitantes",i:false},
+    {f:"tarjeta.html",n:"Tarjetas públicas",d:"La ficha de cada líder con sus botones de llamar, escribir y llegar. Se genera desde Tarjetas y QR.",q:"Visitantes",i:false}
   ]}
 ];
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -229,10 +233,31 @@ const base=location.href.replace(/[^\/]*$/,"");
 $("lista").innerHTML=GRUPOS.map(g=>'<h2>'+esc(g.t)+'</h2><div class="rej">'+
   g.h.map(h=>'<article class="h"><div class="et">'+esc(h.q)+'</div>'+
     '<h3>'+esc(h.n)+'</h3><p>'+esc(h.d)+'</p>'+
-    '<div class="meta">Versión '+esc(h.v)+(h.i?" · se instala en el móvil":"")+'</div>'+
+    '<div class="meta"><span class="ver" data-k="'+esc(h.k||"")+'">'+
+      (h.k?"":"Página")+'</span>'+(h.i?" · se instala en el móvil":"")+'</div>'+
     '<div class="acc"><a class="abrir" href="'+esc(h.f)+'">Abrir</a>'+
     '<button class="qr" data-f="'+esc(h.f)+'" data-n="'+esc(h.n)+'" data-i="'+(h.i?1:0)+'">Código QR</button>'+
     '</div></article>').join("")+'</div>').join("");
+
+(async function(){
+  try{
+    const r=await fetch("version.json?"+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    const v=await r.json();
+    document.querySelectorAll(".ver[data-k]").forEach(e=>{
+      const k=e.dataset.k;
+      e.textContent=k?(v[k]?"Versión "+v[k]:"Sin publicar"):"Página";
+    });
+    if(v.novedades){
+      const n=document.createElement("div");
+      n.className="novedades";
+      n.innerHTML="<b>Lo último</b> "+esc(v.novedades)+
+        (v.fecha?' <span class="f">'+esc(v.fecha)+'</span>':"");
+      const l=document.getElementById("lista");
+      l.parentNode.insertBefore(n,l);
+    }
+  }catch(e){}
+})();
 
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-f]"); if(!b)return;
