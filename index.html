@@ -125,6 +125,17 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 .modal{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:86vh;
   overflow:auto;padding:20px 22px 24px;font-size:15px;line-height:1.65}
 .modal h4{font-size:20px;color:var(--navy);margin:0 0 10px;font-weight:600}
+.modal.ancho{max-width:620px}
+.edcampos{max-height:52vh;overflow-y:auto;padding-right:6px}
+.edcampos label{margin-top:12px}
+.edcampos textarea{width:100%;border:1px solid var(--line2);border-radius:11px;
+  padding:11px 13px;font:inherit;font-size:15px;resize:vertical}
+.edsede{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px}
+.edsede b{color:var(--navy)}
+.edbotones{display:flex;gap:9px;margin-top:16px}
+.edbotones button{flex:1;border:1px solid var(--line2);background:#fff;color:var(--navy);
+  border-radius:11px;padding:13px;font-size:15px;font-weight:500}
+.edbotones .pri{background:var(--blue);color:#fff;border-color:var(--blue)}
 .modal .x{float:right;background:none;border:0;color:var(--muted);font-size:24px;line-height:1}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -150,51 +161,39 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   <h1>El Rey Jesús Oviedo</h1>
   <p class="lema">Iglesia cristiana evangélica · Asturias</p>
 </header>
-<div class="vision">Una iglesia que acoge, forma y envía.</div>
+<div class="vision" id="tVision"></div>
 
 <section id="quienes">
   <h2>Quiénes somos</h2>
-  <h3>Una casa abierta</h3>
-  <p>Somos una iglesia sencilla y familiar. Nos reunimos para adorar a Dios, aprender
-     juntos de la Biblia y cuidarnos unos a otros. Aquí no hace falta traer nada
-     resuelto: se viene como uno está.</p>
-  <div class="vals">
-    <div class="val">La Palabra en el centro</div>
-    <div class="val">Familia antes que programa</div>
-    <div class="val">Cada persona con un lugar</div>
-    <div class="val">Servir a nuestra ciudad</div>
-  </div>
+  <h3 id="tQuienesTit"></h3>
+  <p id="tQuienes"></p>
+  <div class="vals" id="tValores"></div>
   <div class="galeria" id="galeria" aria-label="Fotos de la iglesia"></div>
   <div class="puntos" id="puntos"></div>
 
   <h2 style="margin-top:32px">Nuestros pastores</h2>
-  <p><span class="pastn">Pastores Genilson Santiago y Taiala Santiago</span><br>
-     <span class="pastc">Al frente de la iglesia en Asturias</span></p>
+  <p><span class="pastn" id="tPastores"></span><br><span class="pastc" id="tPastoresPie"></span></p>
   <img class="past" src="pastores.jpg" alt="Cartel de la conferencia Gloria Postrera, 23 y 24 de octubre de 2026">
 </section>
 
 <section id="donde">
   <h2>Dónde estamos</h2>
-  <h3>Cinco sedes en Asturias</h3>
-  <p>Ven a la que te quede más cerca. Si no sabes cuál elegir, escríbenos y te orientamos.</p>
+  <h3 id="tDondeTit"></h3>
+  <p id="tDondeIntro"></p>
   <div class="sedes" id="sedes"></div>
 </section>
 
 <section id="esperar">
   <h2>Tu primera visita</h2>
-  <h3>Qué te vas a encontrar</h3>
-  <p>La reunión dura algo más de una hora. La gente viene como quiere, sin etiqueta.
-     Hay sitio para los niños y siempre encontrarás a alguien en la puerta para orientarte.</p>
-  <p>No se pasa lista, nadie te va a señalar y no tienes que hacer nada que no quieras.
-     Puedes venir, sentarte al fondo y marcharte sin dar explicaciones. Y si quieres
-     quedarte a tomar algo después, mejor.</p>
+  <h3 id="tEsperarTit"></h3>
+  <p id="tEsperar1"></p>
+  <p id="tEsperar2"></p>
 </section>
 
 <section id="contacto">
   <h2>Contacto</h2>
   <h3>¿Quieres que te escribamos?</h3>
-  <p>Déjanos tu nombre y elige la sede que te quede cerca. Se abrirá WhatsApp con el
-     mensaje preparado y tú decides si lo envías.</p>
+  <p id="tContactoIntro"></p>
   <div class="form">
     <div class="campos">
       <div><label for="fN">Tu nombre</label><input type="text" id="fN" autocomplete="name"></div>
@@ -203,8 +202,8 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
     </div>
     <button class="wa" id="fGo">Escríbenos por WhatsApp</button>
     <div class="otros">
-      <a href="tel:+34629793800">Llamar al 629 79 38 00</a>
-      <a href="https://maps.google.com/?q=Calle%20Jard%C3%ADn%2012%2C%2033011%20Oviedo" target="_blank" rel="noopener">Cómo llegar a Oviedo</a>
+      <a id="tLlamar" href="#">Llamar</a>
+      <a id="tLlegar" href="#" target="_blank" rel="noopener">Cómo llegar a Oviedo</a>
     </div>
   </div>
 </section>
@@ -212,11 +211,11 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 <footer class="pie">
   <b>El Rey Jesús Oviedo</b><br>
   Ministerio Internacional Gloria Revelada<br>
-  Calle Jardín 12, 33011 Oviedo · 629 79 38 00
+  <span id="tPie"></span>
   <div class="sep"></div>
   <div style="margin-bottom:12px">
-    <a href="https://instagram.com/migrreyjesusasturias" target="_blank" rel="noopener">Instagram</a> ·
-    <a href="https://www.facebook.com/search/top?q=Migr%20rey%20Jes%C3%BAs%20asturias" target="_blank" rel="noopener">Facebook</a>
+    <a id="tIg" href="#" target="_blank" rel="noopener">Instagram</a> ·
+    <a id="tFb" href="#" target="_blank" rel="noopener">Facebook</a>
   </div>
   <a href="#" id="legal">Aviso legal</a> · <a href="#" id="priv">Privacidad</a>
   <div><a class="herr" href="herramientas.html">Herramientas del equipo</a></div>
@@ -233,17 +232,64 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 <div class="mask" id="mask"><div class="modal" id="modal"></div></div>
 
 <script>
-const TEL="629793800";
-const SEDES=[
-  {n:"Oviedo",pri:true,dir:"Calle Jardín 12, 33011 Oviedo",tel:"629793800",hor:[]},
-  {n:"Gijón",dir:"",tel:"",hor:[["Culto general","domingo 19:00"]]},
-  {n:"La Felguera",dir:"",tel:"",hor:[["Reunión general","miércoles 20:00"]]},
-  {n:"Grado",dir:"",tel:"",hor:[["Reunión general","miércoles 20:00"]]},
-  {n:"Cangas de Onís",dir:"",tel:"",hor:[["Reunión general","lunes 20:00"],["Oración","miércoles 20:00"]]}
-];
+/*INICIO_DATOS*/
+const DATOS={
+  "vision":"Una iglesia que acoge, forma y envía.",
+  "quienesTit":"Una casa abierta",
+  "quienes":"Somos una iglesia sencilla y familiar. Nos reunimos para adorar a Dios, aprender juntos de la Biblia y cuidarnos unos a otros. Aquí no hace falta traer nada resuelto: se viene como uno está.",
+  "valores":["La Palabra en el centro","Familia antes que programa","Cada persona con un lugar","Servir a nuestra ciudad"],
+  "pastores":"Pastores Genilson Santiago y Taiala Santiago",
+  "pastoresPie":"Al frente de la iglesia en Asturias",
+  "dondeTit":"Cinco sedes en Asturias",
+  "dondeIntro":"Ven a la que te quede más cerca. Si no sabes cuál elegir, escríbenos y te orientamos.",
+  "esperarTit":"Qué te vas a encontrar",
+  "esperar1":"La reunión dura algo más de una hora. Aquí se viene como uno es, y así es como se le recibe. Hay sitio para los niños y siempre encontrarás a alguien en la puerta para orientarte.",
+  "esperar2":"No se pasa lista, nadie te va a señalar y no tienes que hacer nada que no quieras. Puedes venir, sentarte al fondo y marcharte sin dar explicaciones. Y si quieres quedarte a tomar algo después, mejor.",
+  "contactoIntro":"Déjanos tu nombre y elige la sede que te quede cerca. Se abrirá WhatsApp con el mensaje preparado y tú decides si lo envías.",
+  "tel":"629793800",
+  "direccion":"Calle Jardín 12, 33011 Oviedo",
+  "instagram":"https://instagram.com/migrreyjesusasturias",
+  "facebook":"https://www.facebook.com/search/top?q=Migr%20rey%20Jes%C3%BAs%20asturias",
+  "sedes":[
+    {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, 33011 Oviedo","tel":"629793800","hor":[]},
+    {"n":"Gijón","dir":"","tel":"","hor":[]},
+    {"n":"La Felguera","dir":"","tel":"","hor":[["Reunión general","miércoles 20:00"]]},
+    {"n":"Grado","dir":"","tel":"","hor":[["Reunión general","miércoles 20:00"]]},
+    {"n":"Cangas de Onís","dir":"","tel":"","hor":[["Reunión general","lunes 20:00"],["Oración","miércoles 20:00"]]}
+  ]
+};
+/*FIN_DATOS*/
+const TEL=DATOS.tel;
+const SEDES=DATOS.sedes;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $=i=>document.getElementById(i);
 
+function pinta(){
+  $("tVision").textContent=DATOS.vision;
+  $("tQuienesTit").textContent=DATOS.quienesTit;
+  $("tQuienes").textContent=DATOS.quienes;
+  $("tValores").innerHTML=DATOS.valores.map(v=>'<div class="val">'+esc(v)+'</div>').join("");
+  $("tPastores").textContent=DATOS.pastores;
+  $("tPastoresPie").textContent=DATOS.pastoresPie;
+  $("tDondeTit").textContent=DATOS.dondeTit;
+  $("tDondeIntro").textContent=DATOS.dondeIntro;
+  $("tEsperarTit").textContent=DATOS.esperarTit;
+  $("tEsperar1").textContent=DATOS.esperar1;
+  $("tEsperar2").textContent=DATOS.esperar2;
+  $("tContactoIntro").textContent=DATOS.contactoIntro;
+  const t=DATOS.tel.replace(/[^0-9]/g,"");
+  $("tLlamar").href="tel:+34"+t;
+  $("tLlamar").textContent="Llamar al "+DATOS.tel;
+  const pri=DATOS.sedes.find(s=>s.pri)||DATOS.sedes[0];
+  $("tLlegar").href="https://maps.google.com/?q="+encodeURIComponent(pri.dir||pri.n);
+  $("tLlegar").textContent="Cómo llegar a "+pri.n;
+  $("tPie").textContent=(DATOS.direccion?DATOS.direccion+" · ":"")+DATOS.tel;
+  $("tIg").href=DATOS.instagram; $("tFb").href=DATOS.facebook;
+  $("tIg").style.display=DATOS.instagram?"":"none";
+  $("tFb").style.display=DATOS.facebook?"":"none";
+  pintaSedes(); pintaProxima();
+}
+function pintaSedes(){
 $("sedes").innerHTML=SEDES.map(s=>'<article class="sede'+(s.pri?" pri":"")+'">'+
   '<div class="et">'+(s.pri?"Iglesia principal":"Sede")+'</div>'+
   '<h4>'+esc(s.n)+'</h4>'+
@@ -254,6 +300,7 @@ $("sedes").innerHTML=SEDES.map(s=>'<article class="sede'+(s.pri?" pri":"")+'">'+
   '</article>').join("");
 
 $("fS").innerHTML=SEDES.map(s=>'<option value="'+esc(s.n)+'">'+esc(s.n)+'</option>').join("");
+}
 const p=new URLSearchParams(location.search).get("sede");
 if(p){ for(const o of $("fS").options){ if(o.value.toLowerCase()===p.toLowerCase())o.selected=true } }
 
@@ -266,18 +313,27 @@ $("fGo").onclick=()=>{
   window.open("https://wa.me/34"+num+"?text="+encodeURIComponent(m),"_blank","noopener");
 };
 
-const PROX=[[0,"19:00","Gijón","Culto general"],[1,"20:00","Cangas de Onís","Reunión general"],
-  [3,"20:00","La Felguera, Grado y Cangas de Onís","Reunión general y oración"]];
-(function(){
-  const hoy=new Date().getDay();
-  let mejor=null, dmin=99;
-  PROX.forEach(x=>{const d=(x[0]-hoy+7)%7; if(d<dmin){dmin=d;mejor=x}});
-  if(!mejor)return;
-  const dias=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
-  const cuando=dmin===0?"hoy":dmin===1?"mañana":"el "+dias[mejor[0]];
-  document.querySelector(".barra .txt").innerHTML=
-    "<b>Próxima reunión "+cuando+"</b>"+mejor[3]+" en "+mejor[2]+" a las "+mejor[1];
-})();
+const DIAS=["domingo","lunes","martes","miercoles","jueves","viernes","sabado"];
+const DIASV=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const sinTilde=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function pintaProxima(){
+  const barra=document.querySelector(".barra .txt"); if(!barra)return;
+  const hoy=new Date().getDay(), lista=[];
+  SEDES.forEach(s=>(s.hor||[]).forEach(h=>{
+    const m=String(h[1]).match(/([A-Za-zÁÉÍÓÚáéíóú]+)\s+([0-9]{1,2}[:.][0-9]{2})/);
+    if(!m)return;
+    const d=DIAS.indexOf(sinTilde(m[1]));
+    if(d<0)return;
+    lista.push({d:d,hora:m[2].replace(".",":"),sede:s.n,que:h[0],dif:(d-hoy+7)%7});
+  }));
+  if(!lista.length){barra.innerHTML="<b>Escríbenos</b>Te decimos horarios y direcciones";return}
+  const min=Math.min.apply(null,lista.map(x=>x.dif));
+  const prox=lista.filter(x=>x.dif===min);
+  const sedes=prox.map(x=>x.sede);
+  const nombres=sedes.length>1?sedes.slice(0,-1).join(", ")+" y "+sedes[sedes.length-1]:sedes[0];
+  const cuando=min===0?"hoy":min===1?"mañana":"el "+DIASV[prox[0].d];
+  barra.innerHTML="<b>Próxima reunión "+cuando+"</b>"+prox[0].que+" en "+nombres+" a las "+prox[0].hora;
+}
 
 const FOTOS=["foto-1.jpg","foto-2.jpg","foto-3.jpg","foto-4.jpg",
              "foto-5.jpg","foto-6.jpg","foto-7.jpg","foto-8.jpg"];
@@ -337,6 +393,87 @@ function abre(h){$("modal").innerHTML='<button class="x" onclick="cierra()" aria
 function cierra(){$("mask").classList.remove("on")}
 $("mask").addEventListener("click",e=>{if(e.target===$("mask"))cierra()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cierra()});
+
+/* ---- editor oculto: tres toques en el logo de la cabecera ---- */
+const CAMPOS=[
+ ["vision","Visión","texto"],["quienesTit","Título de quiénes somos","texto"],
+ ["quienes","Quiénes somos","largo"],["valores","Valores, uno por línea","lista"],
+ ["pastores","Pastores","texto"],["pastoresPie","Pie de los pastores","texto"],
+ ["dondeTit","Título de dónde estamos","texto"],["dondeIntro","Intro de dónde estamos","largo"],
+ ["esperarTit","Título de tu primera visita","texto"],["esperar1","Primer párrafo","largo"],
+ ["esperar2","Segundo párrafo","largo"],["contactoIntro","Intro de contacto","largo"],
+ ["tel","Teléfono general","texto"],["direccion","Dirección del pie","texto"],
+ ["instagram","Instagram","texto"],["facebook","Facebook","texto"]
+];
+function abreEditor(){
+  const c=CAMPOS.map(f=>{
+    const v=f[2]==="lista"?DATOS[f[0]].join("\n"):DATOS[f[0]];
+    return '<label for="ed_'+f[0]+'">'+f[1]+'</label>'+
+      (f[2]==="texto"?'<input type="text" id="ed_'+f[0]+'" value="'+esc(v)+'">'
+       :'<textarea id="ed_'+f[0]+'" rows="'+(f[2]==="lista"?4:3)+'">'+esc(v)+'</textarea>');
+  }).join("");
+  const sd=DATOS.sedes.map((s,i)=>'<div class="edsede"><b>'+esc(s.n)+'</b>'+
+    '<label for="sd_n'+i+'">Nombre</label><input type="text" id="sd_n'+i+'" value="'+esc(s.n)+'">'+
+    '<label for="sd_d'+i+'">Dirección</label><input type="text" id="sd_d'+i+'" value="'+esc(s.dir||"")+'">'+
+    '<label for="sd_t'+i+'">Teléfono propio</label><input type="text" id="sd_t'+i+'" value="'+esc(s.tel||"")+'">'+
+    '<label for="sd_h'+i+'">Horarios, uno por línea: Nombre | día y hora</label>'+
+    '<textarea id="sd_h'+i+'" rows="3">'+esc((s.hor||[]).map(x=>x[0]+" | "+x[1]).join("\n"))+'</textarea>'+
+    '</div>').join("");
+  $("modal").innerHTML='<button class="x" onclick="cierra()" aria-label="Cerrar">×</button>'+
+    '<h4>Editar la web</h4>'+
+    '<p style="font-size:13.5px;color:#7d97a8">Cambia lo que quieras, pulsa <b>Ver cambios</b> '+
+    'para comprobarlo, y luego <b>Descargar index.html</b> y súbelo a GitHub.</p>'+
+    '<div class="edcampos">'+c+'<h4 style="margin-top:18px">Sedes</h4>'+sd+'</div>'+
+    '<div class="edbotones"><button id="edVer">Ver cambios</button>'+
+    '<button id="edBaja" class="pri">Descargar index.html</button></div>';
+  $("mask").classList.add("on");
+  $("modal").classList.add("ancho");
+  $("edVer").onclick=()=>{recoge();pinta();cierra()};
+  $("edBaja").onclick=async()=>{
+    recoge();pinta();
+    const b=$("edBaja"); b.textContent="Preparando…";
+    try{
+      const r=await fetch(location.pathname+"?"+Date.now(),{cache:"no-store"});
+      let src=await r.text();
+      const ini=src.indexOf("/*INICIO_DATOS*/"), fin=src.indexOf("/*FIN_DATOS*/");
+      if(ini<0||fin<0)throw 0;
+      src=src.slice(0,ini)+"/*INICIO_DATOS*/\nconst DATOS="+JSON.stringify(DATOS,null,2)+";\n"+src.slice(fin);
+      const a=document.createElement("a");
+      a.href=URL.createObjectURL(new Blob([src],{type:"text/html"}));
+      a.download="index.html"; a.click();
+      b.textContent="Descargado";
+    }catch(e){ b.textContent="No se pudo"; }
+    setTimeout(()=>{b.textContent="Descargar index.html"},2500);
+  };
+}
+function recoge(){
+  CAMPOS.forEach(f=>{
+    const v=$("ed_"+f[0]).value;
+    DATOS[f[0]]=f[2]==="lista"?v.split("\n").map(x=>x.trim()).filter(Boolean):v.trim();
+  });
+  DATOS.sedes.forEach((s,i)=>{
+    s.n=$("sd_n"+i).value.trim()||s.n;
+    s.dir=$("sd_d"+i).value.trim();
+    s.tel=$("sd_t"+i).value.trim();
+    s.hor=$("sd_h"+i).value.split("\n").map(l=>l.trim()).filter(Boolean)
+      .map(l=>{const p=l.split("|");return [(p[0]||"").trim(),(p[1]||"").trim()]})
+      .filter(x=>x[0]&&x[1]);
+  });
+}
+(function(){
+  const lg=document.querySelector(".nav img"); if(!lg)return;
+  let n=0,t=0;
+  lg.style.cursor="pointer";
+  lg.addEventListener("click",()=>{
+    const a=Date.now();
+    if(a-t>1200)n=0;
+    t=a; n++;
+    if(n>=3){n=0;abreEditor()}
+  });
+})();
+
+pinta();
+
 $("legal").onclick=e=>{e.preventDefault();abre(LEGAL)};
 $("priv").onclick=e=>{e.preventDefault();abre(PRIV)};
 </script>

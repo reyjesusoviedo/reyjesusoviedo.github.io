@@ -55,6 +55,12 @@ main{padding:18px;max-width:760px;margin:0 auto}
 .tile .n{font-size:16px;font-weight:600;color:var(--navy)}
 .tile .d{font-size:12.5px;color:var(--muted);margin-top:2px}
 .count{text-align:center;font-size:12.5px;color:var(--muted);margin-top:16px}
+.nuevaV{position:sticky;top:0;z-index:70;background:#2f7d4f;color:#fff;
+  padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:14px}
+.nuevaV span{flex:1}
+.nuevaV button{background:#fff;color:#225d3a;border:0;border-radius:9px;
+  padding:8px 14px;font-size:13.5px;font-weight:600}
+.nuevaV #nvNo{background:transparent;color:#fff;font-size:20px;padding:2px 8px;font-weight:400}
 .autoria{display:block;width:100%;background:none;border:0;border-top:1px solid var(--line-2);
   margin-top:22px;padding:16px 8px 6px;text-align:center;line-height:1.6}
 .autoria span{display:block;font-size:12.5px;color:var(--muted)}
@@ -387,6 +393,7 @@ body.pr-cartel .sheet.cartel,body.pr-mini .sheet.mini{display:block}
       <b>Lo que borra los datos:</b> limpiar los datos de navegación marcando también los de sitios web, desinstalar la aplicación, o usar el modo incógnito. En iPhone, además, si pasas varias semanas sin abrirla.<br><br>
       <b>Antes de limpiar el navegador, haz una copia.</b> Se restaura en un minuto.</p>
       <p class="hint" id="cfgCopia" style="margin-top:10px"></p>
+      <p class="hint" id="verLinea"></p>
       <div class="row"><button class="btn ghost" id="expBtn">Descargar copia</button>
       <button class="btn ghost" id="impBtn">Restaurar copia</button></div>
       <button class="btn ghost wide" id="wipeBtn">Vaciar y empezar de cero</button>
@@ -1457,6 +1464,7 @@ function generarBienvenida(){
 '.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:12px}'+
 '.val{background:#f6fbff;border-radius:10px;padding:10px 13px;font-size:14px}'+
 '.past{width:100%;border-radius:14px;display:block;margin-bottom:10px}'+
+'.past.esLogo{width:120px;height:120px;border-radius:50%;background:#fff;object-fit:contain;margin:6px auto 12px;padding:6px}'+
 '.past-n{font-weight:600}.past-p{color:#7d97a8;font-size:14px}'+
 '.sede{border:1px solid #dcecf5;border-radius:12px;padding:13px 15px;margin-bottom:10px}'+
 '.sede.foco{border-color:#086fc0;border-width:2px;background:#f6fbff}'+
@@ -1480,7 +1488,15 @@ function generarBienvenida(){
 '.wa{flex:none;background:#25D366;color:#fff;border:0;border-radius:11px;padding:14px 20px;font:inherit;font-size:16px;font-weight:600;cursor:pointer}'+
 '.wa:active{background:#1eb457}'+
 '@media(max-width:430px){.barra .in{flex-wrap:wrap}.wa{width:100%}}';
-  const JS='var S='+seg(datos)+',G='+seg(tel(D.tel))+',LID='+seg(lid)+',TJ='+seg(baseWeb()?"tarjeta.html":"")+';'+
+  const JS='var LOGOB='+seg(D.logo)+',EDITAR='+seg(baseWeb()?baseWeb()+"app.html":"app.html")+';'+
+'(function(){var lg=document.querySelector("header img");if(!lg)return;'+
+'var n=0,t=0;lg.style.cursor="pointer";'+
+'lg.addEventListener("click",function(){var a=Date.now();'+
+'if(a-t>1200){n=0}t=a;n++;if(n>=3){n=0;location.href=EDITAR}});})();'+
+'(function(){var pi=document.getElementById("pastImg");if(!pi)return;'+
+'var falla=function(){pi.onerror=null;pi.src=LOGOB;pi.className="past esLogo"};'+
+'if(pi.complete&&pi.naturalWidth===0){falla()}else{pi.onerror=falla}})();'+
+'var S='+seg(datos)+',G='+seg(tel(D.tel))+',LID='+seg(lid)+',TJ='+seg(baseWeb()?"tarjeta.html":"")+';'+
 'var q=new URLSearchParams(location.search).get("de")||"";'+
 'var L=null;for(var i=0;i<LID.length;i++){if(LID[i].slug===q)L=LID[i]}'+
 'if(L){var ini=L.n.trim().split(/\\s+/).map(function(x){return x[0]}).slice(0,2).join("").toUpperCase();'+
@@ -1513,7 +1529,7 @@ function generarBienvenida(){
 '<h2>Quiénes somos</h2><p>'+esc(b.quienes)+'</p>'+
 '<div class="vals">'+b.valores.map(v=>'<div class="val">'+esc(v)+'</div>').join("")+'</div>'+
 '<h2>Nuestros pastores</h2>'+
-(b.foto?'<img class="past" src="'+b.foto+'" alt="Pastores de la iglesia">':'')+
+'<img class="past" id="pastImg" src="bienvenida-pastores.jpg" alt="Pastores de la iglesia">'+
 '<p><span class="past-n">'+esc(b.pastores)+'</span><br><span class="past-p">'+esc(b.pastoresPie)+'</span></p>'+
 '<h2>Qué te vas a encontrar</h2><p>'+esc(b.esperar)+'</p>'+
 '<h2>Dónde nos reunimos</h2>'+D.sedes.map(bloqueSede).join("")+
@@ -2048,6 +2064,8 @@ function renderCfg(){
       esc(urlTarjeta(tarj(D.defecto)||D.tarjetas[0]||{}))+'</b><br>'+
       'Acuérdate de generar y subir <b>tarjeta.html</b> y <b>bienvenida.html</b>.'
     : 'Sin dirección, el QR solo puede llevar tu ficha de contacto.'; $("cPreg").checked=D.preguntar!==false;
+  if($("verLinea"))$("verLinea").innerHTML="Versión "+VERSION+" · "+FECHA+
+    (hayNueva?' · <b style="color:#2f7d4f">hay una más nueva ('+hayNueva+')</b>':"");
   if($("cfgCopia"))$("cfgCopia").textContent=D.ultimaCopia
     ? "Última copia: "+haceTxt(D.ultimaCopia)+"."
     : "Todavía no has hecho ninguna copia.";
@@ -2106,9 +2124,58 @@ $("wipeBtn").onclick=()=>{
   D=JSON.parse(JSON.stringify(SEED));save();renderInicio();ir("inicio");
 };
 
-if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+const VERSION="1.2", FECHA="6 de septiembre de 2026";
+let hayNueva=null;
+
+function bannerNueva(v){
+  if(document.getElementById("nuevaV"))return;
+  const b=document.createElement("div");
+  b.id="nuevaV"; b.className="nuevaV";
+  b.innerHTML='<span><b>Hay una versión nueva</b>'+(v?" ("+v+")":"")+
+    '</span><button id="nvOk">Actualizar</button>'+
+    '<button id="nvNo" aria-label="Ahora no">×</button>';
+  document.body.insertBefore(b,document.body.firstChild);
+  document.getElementById("nvNo").onclick=()=>b.remove();
+  document.getElementById("nvOk").onclick=async()=>{
+    document.getElementById("nvOk").textContent="Actualizando…";
+    try{
+      if(window.caches){ const ks=await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))) }
+      if(navigator.serviceWorker){
+        const rs=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(rs.map(r=>r.update()));
+      }
+    }catch(e){}
+    location.reload();
+  };
 }
+async function miraVersion(clave){
+  try{
+    const r=await fetch("version.json?"+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    const v=await r.json();
+    const nueva=v[clave];
+    if(nueva&&nueva!==VERSION){ hayNueva=nueva; bannerNueva(nueva) }
+  }catch(e){}
+}
+if(location.protocol.indexOf("http")===0){
+  window.addEventListener("load",()=>{
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("sw.js").then(reg=>{
+        reg.addEventListener("updatefound",()=>{
+          const w=reg.installing;
+          if(!w)return;
+          w.addEventListener("statechange",()=>{
+            if(w.state==="installed"&&navigator.serviceWorker.controller)bannerNueva("");
+          });
+        });
+        setInterval(()=>{try{reg.update()}catch(e){}},30*60*1000);
+      }).catch(()=>{});
+    }
+  });
+}
+
+miraVersion("app");
+setInterval(()=>miraVersion("app"),30*60*1000);
 
 (async function(){
   D=await store.get();

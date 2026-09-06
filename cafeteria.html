@@ -175,6 +175,19 @@ input[type=text],input[type=number],input[type=date],select,textarea{width:100%;
   border:1px solid var(--line-2);border-radius:10px;padding:11px 12px;font-size:15px;color:var(--ink)}
 .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 12px}
 .hint{font-size:12.5px;color:var(--muted);margin:7px 0 0}
+.billetes{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:6px}
+.billetes button{background:#fff;border:1.5px solid var(--line-2);border-radius:11px;
+  padding:14px 8px;font-size:16px;font-weight:600;color:var(--navy)}
+.billetes button:active{background:var(--ice-2);border-color:var(--blue)}
+.cambio{margin-top:14px;background:#e2efe6;border:1px solid #b6d8c1;border-radius:12px;
+  padding:13px 16px;display:flex;justify-content:space-between;align-items:baseline}
+.cambio span{font-size:12.5px;color:#2f7d4f;letter-spacing:.08em;text-transform:uppercase}
+.cambio b{font-size:30px;font-weight:700;color:#256b41}
+.cambio.falta{background:#fae3e0;border-color:#eebeb7}
+.cambio.falta span{color:var(--bad)} .cambio.falta b{color:var(--bad)}
+.cambio.neutro{background:var(--ice-2);border-color:var(--line)}
+.cambio.neutro span{color:var(--muted)} .cambio.neutro b{color:var(--muted)}
+.btn:disabled{background:var(--line-2);color:var(--muted)}
 .err{display:none;font-size:13px;color:var(--bad);margin:7px 0 0;font-weight:500}
 .ops{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
 .op{background:#fff;border:1px solid var(--line-2);border-radius:99px;
@@ -199,6 +212,12 @@ input[type=text],input[type=number],input[type=date],select,textarea{width:100%;
   overflow:auto;padding:18px 20px 20px}
 .modal header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
 .modal .x{background:none;border:0;color:var(--muted);font-size:23px;line-height:1;padding:2px 8px}
+.nuevaV{position:sticky;top:0;z-index:70;background:#2f7d4f;color:#fff;
+  padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:14px}
+.nuevaV span{flex:1}
+.nuevaV button{background:#fff;color:#225d3a;border:0;border-radius:9px;
+  padding:8px 14px;font-size:13.5px;font-weight:600}
+.nuevaV #nvNo{background:transparent;color:#fff;font-size:20px;padding:2px 8px;font-weight:400}
 .autoria{display:block;width:100%;background:none;border:0;border-top:1px solid var(--line-2);
   margin-top:24px;padding:16px 8px 6px;text-align:center;line-height:1.6}
 .autoria span{display:block;font-size:12.5px;color:var(--muted)}
@@ -338,6 +357,7 @@ input[type=text],input[type=number],input[type=date],select,textarea{width:100%;
       <p class="hint" style="margin:0">Todo se guarda solo en esta tablet. Con dinero de por medio,
         haz copia cada semana y guárdala fuera del aparato.</p>
       <p class="hint" id="cfgCopia"></p>
+      <p class="hint" id="verLinea"></p>
       <div class="row"><button class="btn ghost" id="expBtn">Descargar copia</button>
       <button class="btn ghost" id="impBtn">Restaurar copia</button></div>
       <button class="btn ghost wide" id="wipeBtn">Vaciar y empezar de cero</button>
@@ -639,7 +659,7 @@ function abrirCaja(){
   $("acOk").onclick=()=>{
     D.turno={id:uid(),abierto:true,inicio:Date.now(),fecha:hoy(),
       encargadoId:$("acE").value,fondo:num($("acF").value)||0};
-    D.abiertos=[]; save(); closeModal(); ir("servir");
+    D.abiertos=[]; save(); closeModal(); renderInicio(); ir("servir");
   };
 }
 
@@ -774,9 +794,61 @@ function renombrar(nuevo){
 document.querySelector(".pagos").addEventListener("click",e=>{
   const b=e.target.closest("[data-pago]"); if(!b)return;
   const p=pedidoActivo(); if(!p||!p.lineas.length)return;
-  const pago=b.dataset.pago, total=pago==="sin"?0:totalDe(p);
+  if(b.dataset.pago==="efectivo"){ cobroEfectivo(p); return }
+  cierraPedido(p,b.dataset.pago,0,0);
+});
+function cobroEfectivo(p){
+  const total=totalDe(p);
+  const billetes=[5,10,20,50].filter(v=>v>total);
+  const redondo=Math.ceil(total);
+  const rapidos=[["justo","Justo",total]]
+    .concat(redondo>total&&billetes.indexOf(redondo)<0?[["r",eur(redondo),redondo]]:[])
+    .concat(billetes.map(v=>[String(v),eur(v),v]));
+  openModal('<header><div><div class="eyebrow">Efectivo · '+esc(p.nombre)+'</div>'+
+      '<h2 style="margin:0">'+eur(total)+'</h2></div>'+
+    '<button class="x" onclick="closeModal()" aria-label="Cerrar">×</button></header>'+
+    '<label>¿Con cuánto paga?</label>'+
+    '<div class="billetes" id="cbBill">'+rapidos.map(r=>
+      '<button data-v="'+r[2]+'">'+r[1]+'</button>').join("")+'</div>'+
+    '<label for="cbEnt">O escríbelo</label>'+
+    '<input type="text" id="cbEnt" inputmode="decimal" placeholder="0,00">'+
+    '<div id="cbCambio"></div>'+
+    '<div class="row"><button class="btn" id="cbOk">Cobrar</button></div>');
+  const pinta=()=>{
+    const e=num($("cbEnt").value);
+    const c=$("cbCambio"), ok=$("cbOk");
+    if(isNaN(e)||$("cbEnt").value.trim()===""){
+      c.innerHTML='<div class="cambio neutro"><span>Cambio</span><b>—</b></div>';
+      ok.disabled=false; ok.textContent="Cobrar"; return;
+    }
+    if(e+0.0001<total){
+      c.innerHTML='<div class="cambio falta"><span>Faltan</span><b>'+eur(total-e)+'</b></div>';
+      ok.disabled=true; ok.textContent="Falta dinero"; return;
+    }
+    c.innerHTML='<div class="cambio"><span>Cambio a devolver</span><b>'+eur(e-total)+'</b></div>';
+    ok.disabled=false; ok.textContent=e-total<0.005?"Cobrar":"Cobrar y devolver "+eur(e-total);
+  };
+  $("cbEnt").addEventListener("input",pinta);
+  $("cbBill").onclick=ev=>{
+    const b=ev.target.closest("[data-v]"); if(!b)return;
+    $("cbEnt").value=(+b.dataset.v).toFixed(2).replace(".",",");
+    pinta();
+  };
+  $("cbOk").onclick=()=>{
+    const e=num($("cbEnt").value);
+    const ent=isNaN(e)?total:e;
+    if(ent+0.0001<total)return;
+    closeModal();
+    cierraPedido(p,"efectivo",ent,ent-total);
+  };
+  pinta();
+  setTimeout(()=>{try{$("cbEnt").focus()}catch(x){}},60);
+}
+function cierraPedido(p,pago,entregado,cambio){
+  const total=pago==="sin"?0:totalDe(p);
   D.ventas.push({id:uid(),fecha:Date.now(),turnoId:D.turno.id,encargadoId:D.turno.encargadoId,
-    nombre:p.nombre,tel:p.tel||"",lineas:p.lineas.slice(),total:total,pago:pago,anulado:false});
+    nombre:p.nombre,tel:p.tel||"",lineas:p.lineas.slice(),total:total,pago:pago,
+    entregado:entregado||0,cambio:cambio||0,anulado:false});
   p.lineas.forEach(l=>{const pr=D.productos.find(x=>x.id===l.pid);
     if(pr&&pr.stockOn)pr.stock=Math.max(0,pr.stock-l.n)});
   D.abiertos=D.abiertos.filter(x=>x.id!==p.id);
@@ -784,7 +856,7 @@ document.querySelector(".pagos").addEventListener("click",e=>{
   ultimoCobro=D.ventas[D.ventas.length-1];
   registrarVenta(ultimoCobro);
   save(); renderServir();
-});
+}
 let ultimoCobro=null;
 function renderCobrado(){
   if(!ultimoCobro){$("cCobrado").innerHTML="";return}
@@ -972,7 +1044,7 @@ function renderCaja(){
       '<th>Forma</th><th class="num">Importe</th><th></th></tr>'+
       vs.slice().reverse().map(v=>'<tr><td>'+hora(v.fecha)+'</td><td>'+esc(v.nombre)+'</td>'+
       '<td>'+(v.pago==="sin"?"sin aportación":v.pago)+'</td>'+
-      '<td class="num">'+eur(v.total)+'</td>'+
+      '<td class="num">'+eur(v.total)+(v.cambio>0.005?'<br><span style="font-size:11.5px;color:var(--muted)">de '+eur(v.entregado)+'</span>':'')+'</td>'+
       '<td class="num"><button class="btn ghost" style="padding:6px 11px;font-size:12.5px" '+
       'data-comp="'+v.id+'">Comprobante</button></td></tr>').join("")+'</table></div>':"");
   $("cajaBody").addEventListener("click",e=>{
@@ -1118,6 +1190,8 @@ function renderCfg(){
   $("cfgNotas").value=(D.notasRapidas||[]).join("\n"); $("cfgDir").value=D.direccion||"";
   $("cfgIgl").value=D.iglesia||""; $("cfgOrg").value=D.org||"";
   pintaInstalar(); renderSnaps();
+  $("verLinea").innerHTML="Versión "+VERSION+" · "+FECHA+
+    (hayNueva?' · <b style="color:#2f7d4f">hay una más nueva ('+hayNueva+')</b>':"");
   $("cfgCopia").textContent=D.ultimaCopia
     ? "Última copia: hace "+Math.floor((Date.now()-D.ultimaCopia)/864e5)+" días."
     : "Todavía no has hecho ninguna copia.";
@@ -1282,9 +1356,58 @@ if($("instBtn"))$("instBtn").onclick=async()=>{
   try{await instPrompt.userChoice}catch(e){}
   instPrompt=null; pintaInstalar();
 };
-if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+const VERSION="1.3", FECHA="6 de septiembre de 2026";
+let hayNueva=null;
+
+function bannerNueva(v){
+  if(document.getElementById("nuevaV"))return;
+  const b=document.createElement("div");
+  b.id="nuevaV"; b.className="nuevaV";
+  b.innerHTML='<span><b>Hay una versión nueva</b>'+(v?" ("+v+")":"")+
+    '</span><button id="nvOk">Actualizar</button>'+
+    '<button id="nvNo" aria-label="Ahora no">×</button>';
+  document.body.insertBefore(b,document.body.firstChild);
+  document.getElementById("nvNo").onclick=()=>b.remove();
+  document.getElementById("nvOk").onclick=async()=>{
+    document.getElementById("nvOk").textContent="Actualizando…";
+    try{
+      if(window.caches){ const ks=await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))) }
+      if(navigator.serviceWorker){
+        const rs=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(rs.map(r=>r.update()));
+      }
+    }catch(e){}
+    location.reload();
+  };
 }
+async function miraVersion(clave){
+  try{
+    const r=await fetch("version.json?"+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    const v=await r.json();
+    const nueva=v[clave];
+    if(nueva&&nueva!==VERSION){ hayNueva=nueva; bannerNueva(nueva) }
+  }catch(e){}
+}
+if(location.protocol.indexOf("http")===0){
+  window.addEventListener("load",()=>{
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("sw.js").then(reg=>{
+        reg.addEventListener("updatefound",()=>{
+          const w=reg.installing;
+          if(!w)return;
+          w.addEventListener("statechange",()=>{
+            if(w.state==="installed"&&navigator.serviceWorker.controller)bannerNueva("");
+          });
+        });
+        setInterval(()=>{try{reg.update()}catch(e){}},30*60*1000);
+      }).catch(()=>{});
+    }
+  });
+}
+
+miraVersion("cafeteria");
+setInterval(()=>miraVersion("cafeteria"),30*60*1000);
 
 function openModal(h){$("modal").innerHTML=h;$("mask").classList.add("on")}
 function closeModal(){$("mask").classList.remove("on")}
