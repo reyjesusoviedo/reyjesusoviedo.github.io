@@ -66,6 +66,26 @@ h2{font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--soft
   font-weight:600;margin:0 0 10px}
 h3{font-size:26px;font-weight:600;color:var(--navy);margin:0 0 12px;line-height:1.2}
 p{margin:0 0 14px}
+.evcar{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:10px calc(50% - 172px) 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.evcar::-webkit-scrollbar{display:none}
+.evcar.solo{padding-left:0;padding-right:0}
+.evcar.solo .evc{width:100%;max-width:none}
+.evc{flex:none;width:344px;scroll-snap-align:center;background:var(--deep);color:#fff;
+  border-radius:18px;overflow:hidden;opacity:.5;transform:scale(.93);
+  transition:opacity .35s,transform .35s}
+.evc.foco{opacity:1;transform:scale(1)}
+.evc img{width:100%;display:block;aspect-ratio:3/4;object-fit:cover}
+.evc .cuerpo{padding:18px 20px 20px}
+.evc .cuando-b{display:inline-block;background:#25D366;color:#0b3d1e;border-radius:99px;
+  padding:4px 12px;font-size:12.5px;font-weight:600;margin-bottom:9px}
+.evc h4{font-size:21px;font-weight:600;margin:0 0 4px;color:#fff;line-height:1.2}
+.evc .fecha{font-size:15px;color:#cfe6fa;margin:0 0 6px}
+.evc .txt{font-size:14px;color:#9db5c7;margin:0;line-height:1.5}
+.evc .bts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.evc .bts button{flex:1;min-width:96px;border:0;border-radius:10px;padding:11px 8px;
+  font-size:13.5px;font-weight:600;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.evc .bts .pri{background:#25D366;color:#0b3d1e}
 .dest{background:var(--deep);color:#fff;border-radius:18px;overflow:hidden;
   display:grid;grid-template-columns:280px minmax(0,1fr);gap:0;align-items:stretch}
 @media(max-width:700px){.dest{grid-template-columns:1fr}}
@@ -301,7 +321,13 @@ const DATOS={
   "eventos":[
     {"id":"e1","titulo":"Conferencia Gloria Postrera","desde":"2026-10-23","hasta":"2026-10-24",
      "hora":"","sede":"Oviedo","quien":"Anfitriones: Pr. Genilson Santiago y Prª Taiala Santiago · Invitados: Apóst. Dublas Rodríguez y Profet. Jessica Rodríguez",
-     "cartel":"evento-1.jpg","texto":"Dos días de conferencia con invitados. Entrada libre."}
+     "cartel":"evento-1.jpg","texto":"Dos días de conferencia con invitados. Entrada libre."},
+    {"id":"e2","titulo":"Vigilia de oración","desde":"2026-11-14","hasta":"",
+     "hora":"22:00","sede":"Oviedo","quien":"",
+     "cartel":"evento-2.jpg","texto":"Toda la noche en oración. Cambia el cartel por el vuestro."},
+    {"id":"e3","titulo":"Encuentro de damas","desde":"2026-12-05","hasta":"",
+     "hora":"17:00","sede":"Gijón","quien":"",
+     "cartel":"evento-3.jpg","texto":"Una tarde para ellas. Cambia el cartel por el vuestro."}
   ],
   "sedes":[
     {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, 33011 Oviedo","tel":"629793800","hor":[]},
@@ -376,36 +402,55 @@ function preguntaEvento(id){
     encodeURIComponent("Hola, me interesa "+e.titulo+" ("+fechaTxt(e)+"). ¿Me contáis más?"),
     "_blank","noopener");
 }
+function distintivo(e){
+  const d=diasPara(e);
+  if(d<0)return "";
+  if(d===0)return "es hoy";
+  if(d===1)return "mañana";
+  if(d<=7)return "esta semana";
+  if(d<=45)return "en "+d+" días";
+  return "";
+}
 function pintaEventos(){
-  const fs=futuros();
+  const fs=futuros().slice(0,3);
   const dest=$("destacado"), ag=$("agenda"), nav=$("navAgenda");
-  if(!fs.length){ dest.hidden=true; ag.hidden=true; nav.hidden=true; return }
-  nav.hidden=false;
-  const e=fs[0], d=diasPara(e);
-  dest.hidden=false;
-  dest.innerHTML='<div class="dest">'+
-    (e.cartel?'<img src="'+esc(e.cartel)+'" alt="Cartel de '+esc(e.titulo)+'" onerror="this.remove()">':'')+
-    '<div class="cuerpo"><div class="et">Próximo evento</div>'+
-    '<h3>'+esc(e.titulo)+'</h3>'+
-    '<p class="cuando">'+esc(fechaTxt(e))+(e.sede?" · "+esc(e.sede):"")+'</p>'+
-    (e.texto?'<p class="cuando" style="font-size:15px;color:#9db5c7">'+esc(e.texto)+'</p>':'')+
-    (e.quien?'<p class="quien">'+esc(e.quien)+'</p>':'')+
-    (d>0&&d<=45?'<div class="faltan">'+(d===1?"mañana":"faltan "+d+" días")+'</div>':
-      d===0?'<div class="faltan">es hoy</div>':'')+
-    '<div class="bts"><button class="pri" onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button>'+
-    '<button onclick="bajaIcs(\''+e.id+'\')">Añadir al calendario</button>'+
-    '<button onclick="comparte(\''+e.id+'\')">Compartir</button></div>'+
-    '</div></div>';
-  const resto=fs.slice(1);
-  ag.hidden=!resto.length;
-  $("listaEventos").innerHTML=resto.map(x=>'<article class="ev">'+
-    (x.cartel?'<img src="'+esc(x.cartel)+'" alt="" onerror="this.remove()">':'<div></div>')+
-    '<div><h4>'+esc(x.titulo)+'</h4>'+
-    '<p class="cuando">'+esc(fechaTxt(x))+(x.sede?" · "+esc(x.sede):"")+'</p>'+
-    (x.texto?'<p>'+esc(x.texto)+'</p>':'')+
-    '<div class="bts"><button onclick="preguntaEvento(\''+x.id+'\')">Quiero ir</button>'+
-    '<button onclick="bajaIcs(\''+x.id+'\')">Al calendario</button>'+
-    '<button onclick="comparte(\''+x.id+'\')">Compartir</button></div></div></article>').join("");
+  ag.hidden=true;
+  if(!fs.length){ dest.hidden=true; nav.hidden=true; return }
+  nav.hidden=false; dest.hidden=false;
+  const uno=fs.length===1;
+  dest.innerHTML='<h2>Agenda</h2><h3 style="margin-bottom:16px">Lo que viene</h3>'+
+    '<div class="evcar'+(uno?" solo":"")+'" id="evcar">'+fs.map((e,i)=>{
+      const dis=distintivo(e);
+      return '<article class="evc'+(i===0?" foco":"")+'" data-i="'+i+'">'+
+      (e.cartel?'<img src="'+esc(e.cartel)+'" alt="Cartel de '+esc(e.titulo)+'" onerror="this.remove()">':'')+
+      '<div class="cuerpo">'+
+        (dis?'<span class="cuando-b">'+esc(dis)+'</span>':'')+
+        '<h4>'+esc(e.titulo)+'</h4>'+
+        '<p class="fecha">'+esc(fechaTxt(e))+(e.sede?" · "+esc(e.sede):"")+'</p>'+
+        (e.texto?'<p class="txt">'+esc(e.texto)+'</p>':'')+
+        '<div class="bts"><button class="pri" onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button>'+
+        '<button onclick="bajaIcs(\''+e.id+'\')" aria-label="Añadir al calendario"><i></i>Calendario</button>'+
+        '<button onclick="comparte(\''+e.id+'\')">Compartir</button></div>'+
+      '</div></article>'}).join("")+'</div>'+
+    (fs.length>1?'<div class="puntos" id="evPuntos">'+fs.map((e,i)=>
+      '<button aria-label="Evento '+(i+1)+'"'+(i?'':' aria-current="true"')+' data-e="'+i+'"></button>').join("")+'</div>':'');
+  if(fs.length>1){
+    const car=$("evcar"), pt=$("evPuntos");
+    const marca=()=>{
+      let mejor=0,dmin=1e9;
+      const c=car.scrollLeft+car.clientWidth/2;
+      [...car.children].forEach((x,i)=>{
+        const m2=x.offsetLeft+x.offsetWidth/2, dd=Math.abs(m2-c);
+        if(dd<dmin){dmin=dd;mejor=i}});
+      [...car.children].forEach((x,i)=>x.classList.toggle("foco",i===mejor));
+      [...pt.children].forEach((b,i)=>i===mejor?b.setAttribute("aria-current","true"):b.removeAttribute("aria-current"));
+    };
+    car.addEventListener("scroll",marca,{passive:true});
+    pt.onclick=ev=>{const b=ev.target.closest("[data-e]"); if(!b)return;
+      const c=car.children[+b.dataset.e];
+      car.scrollTo({left:c.offsetLeft-(car.clientWidth-c.offsetWidth)/2,behavior:"smooth"})};
+    setTimeout(marca,60);
+  }
 }
 
 function pinta(){

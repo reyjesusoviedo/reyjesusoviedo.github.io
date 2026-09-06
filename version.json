@@ -2,6 +2,6 @@
   "app": "1.3",
   "cafeteria": "1.3",
   "fecha": "2026-09-06",
-  "novedades": "Tarjetas: panel de control y envío de fichas entre móviles. Web: eventos. Cafetería: cálculo de la vuelta.",
-  "web": "1.1"
+  "novedades": "Web: los eventos en carrusel, con el más próximo en el centro. Tarjetas: panel de control y envío de fichas.",
+  "web": "1.2"
 }
