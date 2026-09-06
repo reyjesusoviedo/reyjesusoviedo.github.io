@@ -109,6 +109,22 @@ p{margin:0 0 14px}
   border-radius:99px;padding:7px 16px;font-size:13.5px;cursor:pointer}
 .pastillas button[aria-current=true]{background:#fff;color:var(--navy);border-color:#fff;font-weight:600}
 .sinhoras{text-align:center;color:#9db5c7;font-size:15px;padding:10px 0 4px}
+.pastnav{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.pastnav button{border:1px solid var(--line2);background:#fff;color:var(--muted);
+  border-radius:99px;padding:7px 15px;font-size:13.5px;cursor:pointer;font-family:inherit}
+.pastnav button[aria-current=true]{border-color:var(--blue);color:var(--blue);
+  background:var(--ice2);font-weight:500}
+#destacado{position:relative}
+.flecha{display:none}
+@media(min-width:900px){
+  .flecha{display:flex;position:absolute;top:52%;z-index:5;width:46px;height:46px;
+    align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--line2);
+    background:#fff;color:var(--navy);font-size:26px;line-height:1;cursor:pointer;
+    box-shadow:0 4px 14px rgba(6,29,72,.14)}
+  .flecha:hover{border-color:var(--blue);color:var(--blue)}
+  .flecha.izq{left:-6px}
+  .flecha.der{right:-6px}
+}
 .evcar{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
   padding:10px calc(50% - 172px) 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .evcar::-webkit-scrollbar{display:none}
@@ -176,6 +192,13 @@ p{margin:0 0 14px}
 
 .sdcar{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
   padding:10px calc(50% - 172px) 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+@media(min-width:900px){
+  .sdcar{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:14px;overflow:visible;padding:10px 0 4px}
+  .sdc{width:auto;opacity:1;transform:none}
+  .sdc.foco{transform:none}
+  .solomovil{display:none}
+}
 .sdcar::-webkit-scrollbar{display:none}
 .sdc{flex:none;width:344px;scroll-snap-align:center;background:#fff;
   border:1px solid var(--line);border-radius:18px;overflow:hidden;
@@ -489,12 +512,9 @@ const DATOS={
     {"id":"e1","titulo":"Conferencia Gloria Postrera","desde":"2026-10-23","hasta":"2026-10-24",
      "hora":"","sede":"Oviedo","quien":"Anfitriones: Pr. Genilson Santiago y Prª Taiala Santiago · Invitados: Apóst. Dublas Rodríguez y Profet. Jessica Rodríguez",
      "cartel":"evento-1.jpg","texto":"Dos días de conferencia con invitados. Entrada libre."},
-    {"id":"e2","titulo":"Vigilia de oración","desde":"2026-11-14","hasta":"",
-     "hora":"22:00","sede":"Oviedo","quien":"",
-     "cartel":"evento-2.jpg","texto":"Toda la noche en oración. Cambia el cartel por el vuestro."},
-    {"id":"e3","titulo":"Encuentro de damas","desde":"2026-12-05","hasta":"",
-     "hora":"17:00","sede":"Gijón","quien":"",
-     "cartel":"evento-3.jpg","texto":"Una tarde para ellas. Cambia el cartel por el vuestro."}
+    {"id":"e4","titulo":"Retiro de sanidad interior y liberación","desde":"2026-09-19","hasta":"",
+     "hora":"9:00","sede":"Oviedo","quien":"",
+     "cartel":"evento-retiro-sanidad.jpg","texto":"Un día completo. Calle Jardín 12, La Corredoria."}
   ],
   "sedes":[
     {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, 33011 Oviedo","tel":"629793800","hor":[["Culto general","domingo 11:00","reunion-culto-general.jpg"],["Culto de oración","martes 20:00","reunion-culto-de-oracion.jpg"]],"img":"sede-oviedo.jpg"},
@@ -660,8 +680,15 @@ function pintaEventos(){
         '<div class="bts"><button class="pri" onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button>'+
         '<button onclick="comparte(\''+e.id+'\')">Compartir</button></div>'+
       '</div></article>'}).join("")+'</div>'+
-    (fs.length>1?'<div class="puntos" id="evPuntos">'+fs.map((e,i)=>
-      '<button aria-label="Evento '+(i+1)+'"'+(i?'':' aria-current="true"')+' data-e="'+i+'"></button>').join("")+'</div>':'');
+    (fs.length>1?'<div class="pastnav" id="evPuntos">'+fs.map((e,i)=>
+      '<button'+(i?'':' aria-current="true"')+' data-e="'+i+'">'+esc(e.titulo)+'</button>').join("")+'</div>':'');
+  if(fs.length>1){
+    const cont=dest.querySelector(".evcar");
+    cont.insertAdjacentHTML("beforebegin",
+      '<button class="flecha izq" id="evIzq" aria-label="Anterior">&#8249;</button>'+
+      '<button class="flecha der" id="evDer" aria-label="Siguiente">&#8250;</button>');
+    dest.classList.add("conflechas");
+  }
   if(fs.length>1){
     const car=$("evcar"), pt=$("evPuntos");
     const marca=()=>{
@@ -674,9 +701,13 @@ function pintaEventos(){
       [...pt.children].forEach((b,i)=>i===mejor?b.setAttribute("aria-current","true"):b.removeAttribute("aria-current"));
     };
     car.addEventListener("scroll",marca,{passive:true});
-    pt.onclick=ev=>{const b=ev.target.closest("[data-e]"); if(!b)return;
-      const c=car.children[+b.dataset.e];
-      car.scrollTo({left:c.offsetLeft-(car.clientWidth-c.offsetWidth)/2,behavior:"smooth"})};
+    const vaA=i=>{const c=car.children[Math.max(0,Math.min(car.children.length-1,i))];
+      if(c)car.scrollTo({left:c.offsetLeft-(car.clientWidth-c.offsetWidth)/2,behavior:"smooth"})};
+    pt.onclick=ev=>{const b=ev.target.closest("[data-e]"); if(b)vaA(+b.dataset.e)};
+    const cual=()=>[...car.children].findIndex(x=>x.classList.contains("foco"));
+    const iz=$("evIzq"), de=$("evDer");
+    if(iz)iz.onclick=()=>vaA(cual()-1);
+    if(de)de.onclick=()=>vaA(cual()+1);
     setTimeout(marca,60);
   }
 }
@@ -765,8 +796,8 @@ function pintaSedes(){
           '<button onclick="preguntaSede(\''+esc(s.n).replace(/'/g,"")+'\')">Escríbenos</button>'+
         '</div>'+
       '</div></article>').join("")+'</div>'+
-    '<div class="puntos" id="sdPuntos">'+SEDES.map((s,i)=>
-      '<button aria-label="'+esc(s.n)+'"'+(i?'':' aria-current="true"')+' data-s="'+i+'"></button>').join("")+'</div>';
+    '<div class="pastnav solomovil" id="sdPuntos">'+SEDES.map((s,i)=>
+      '<button'+(i?'':' aria-current="true"')+' data-s="'+i+'">'+esc(s.n)+'</button>').join("")+'</div>';
   const car=$("sdcar"), pt=$("sdPuntos");
   const marca=()=>{
     let mejor=0,dmin=1e9;
