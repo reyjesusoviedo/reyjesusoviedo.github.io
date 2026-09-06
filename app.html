@@ -132,6 +132,12 @@ main{padding:18px;max-width:760px;margin:0 auto}
 .opfondo[aria-pressed=true]{border-color:var(--blue);box-shadow:0 0 0 2px var(--ice)}
 
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:12px}
+.panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:12px}
+.pk{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.pk span{display:block;font-size:12px;color:var(--muted)}
+.pk b{display:block;font-size:23px;font-weight:600;color:var(--navy);margin-top:2px}
+.aviso2{background:#fdf6e8;border:1px solid #f0dcb8;border-radius:12px;
+  padding:12px 14px;font-size:13.5px;color:#7a4d0a;margin-bottom:12px}
 .li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
 .li:last-child{border-bottom:0}
 .li .nm{flex:1;min-width:0}
@@ -296,6 +302,7 @@ body.pr-cartel .sheet.cartel,body.pr-mini .sheet.mini{display:block}
 
   <div class="pane" id="p-tarjetas">
     <div class="bar"><h2>Tarjetas</h2><div class="spacer"></div>
+      <button class="btn ghost" id="eqImp">Recibir ficha</button>
       <button class="btn ghost" id="eqNueva">Nueva</button></div>
     <div id="eqBody"></div>
   </div>
@@ -693,6 +700,7 @@ function renderTarjeta(){
       '<button class="btn ghost" id="mImg">Compartir como imagen</button></div>'+
     '<div class="row"><button class="btn ghost" id="mVcf">Descargar contacto</button>'+
       '<button class="btn ghost" id="mSig">Firma de correo</button>'+
+      '<button class="btn ghost" id="mEnv">Enviar mi ficha</button>'+
       '<button class="btn ghost" id="mEd">Editar</button></div>';
   $("mFlip").onclick=()=>{flip=!flip;$("mCard").classList.toggle("back",flip)};
   $("mQR").onclick=()=>abrirQR(t);
@@ -700,21 +708,130 @@ function renderTarjeta(){
   $("mImg").onclick=()=>compartirImagen(t);
   $("mSig").onclick=()=>firma(t);
   $("mEd").onclick=()=>editTarjeta(t.id);
+  $("mEnv").onclick=()=>enviarFicha(t);
 }
 function bajar(txt,mime,nombre){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([txt],{type:mime})); a.download=nombre; a.click();
 }
 
+/* ---------- intercambio de fichas entre móviles ---------- */
+function b64u(s){return btoa(unescape(encodeURIComponent(s)))}
+function ub64(s){return decodeURIComponent(escape(atob(s)))}
+function fichaCodigo(t){
+  const d={n:t.nombre,c:t.cargo||"",t:t.tel||"",e:t.email||"",
+    s:(sede(t.sedeId)||{}).nombre||"",r:t.redes||{},f:t.foto||""};
+  return "TARJETA1:"+b64u(JSON.stringify(d));
+}
+function leeFicha(txt){
+  const m=String(txt).match(/TARJETA1:([A-Za-z0-9+/=]+)/);
+  if(!m)return null;
+  try{ const d=JSON.parse(ub64(m[1])); return d&&d.n?d:null }catch(e){ return null }
+}
+async function fotoLigera(src){
+  if(!src)return "";
+  try{
+    const im=await cargaImg(src);
+    const c=document.createElement("canvas"), L=Math.min(im.width,im.height);
+    c.width=c.height=200;
+    c.getContext("2d").drawImage(im,(im.width-L)/2,(im.height-L)/2,L,L,0,0,200,200);
+    return c.toDataURL("image/jpeg",.7);
+  }catch(e){ return src }
+}
+async function enviarFicha(t){
+  const ligera=await fotoLigera(t.foto);
+  const copia=Object.assign({},t,{foto:ligera});
+  const cod=fichaCodigo(copia);
+  const kb=Math.round(cod.length/1024);
+  openModal('<header><h2>Enviar mi ficha</h2>'+
+    '<button class="x" onclick="closeModal()" aria-label="Cerrar">×</button></header>'+
+    '<p style="font-size:14px;margin:0 0 8px">Manda esto al pastor y él la añade a la lista. '+
+    'Va todo dentro: nombre, cargo, teléfono, correo, redes y foto.</p>'+
+    '<p class="hint" style="margin:0 0 10px">Ocupa unos '+kb+' KB. Es un texto largo, es normal.</p>'+
+    '<textarea id="fcCod" readonly style="min-height:90px;font-size:11px">'+esc(cod)+'</textarea>'+
+    '<div class="row"><button class="btn" id="fcWa">Enviar por WhatsApp</button>'+
+    '<button class="btn ghost" id="fcCopia">Copiar</button></div>');
+  $("fcWa").onclick=()=>window.open("https://wa.me/?text="+encodeURIComponent(cod),"_blank","noopener");
+  $("fcCopia").onclick=()=>{
+    try{navigator.clipboard.writeText(cod)}catch(e){$("fcCod").select();try{document.execCommand("copy")}catch(x){}}
+    $("fcCopia").textContent="Copiado";
+    setTimeout(()=>{try{$("fcCopia").textContent="Copiar"}catch(e){}},1600);
+  };
+}
+function importarFicha(){
+  openModal('<header><h2>Recibir una ficha</h2>'+
+    '<button class="x" onclick="closeModal()" aria-label="Cerrar">×</button></header>'+
+    '<p style="font-size:14px;margin:0 0 8px">Pega aquí lo que te haya mandado el líder.</p>'+
+    '<textarea id="imCod" style="min-height:110px;font-size:11px" placeholder="TARJETA1:…"></textarea>'+
+    '<p class="err" id="imErr">Ese texto no es una ficha. Pide que te la manden otra vez entera.</p>'+
+    '<div class="row"><button class="btn" id="imOk">Leer la ficha</button></div>');
+  $("imOk").onclick=()=>{
+    const d=leeFicha($("imCod").value);
+    if(!d){$("imErr").style.display="block";return}
+    $("imErr").style.display="none";
+    const ya=D.tarjetas.find(x=>sinAc(x.nombre)===sinAc(d.n));
+    const s=D.sedes.find(x=>sinAc(x.nombre)===sinAc(d.s||""));
+    closeModal();
+    openModal('<header><h2>'+esc(d.n)+'</h2>'+
+      '<button class="x" onclick="closeModal()" aria-label="Cerrar">×</button></header>'+
+      (d.f?'<img src="'+d.f+'" alt="" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px">':'')+
+      '<p style="font-size:14px;margin:0">'+esc(d.c||"")+(d.s?" · "+esc(d.s):"")+'</p>'+
+      '<p class="hint" style="margin:4px 0 0">'+esc(d.t||"sin teléfono")+
+        (d.e?" · "+esc(d.e):"")+
+        (Object.keys(d.r||{}).length?" · "+Object.keys(d.r).length+" redes":"")+'</p>'+
+      '<p class="hint" style="margin-top:12px">'+
+        (ya?"Ya existe una tarjeta con ese nombre. Se actualizará con estos datos."
+           :"Se creará una tarjeta nueva.")+'</p>'+
+      '<div class="row"><button class="btn" id="imGo">'+(ya?"Actualizar":"Añadir")+'</button>'+
+      '<button class="btn ghost" onclick="closeModal()">Cancelar</button></div>');
+    $("imGo").onclick=()=>{
+      const t=ya||{id:uid(),sedeId:(D.sedes[0]||{}).id};
+      t.nombre=d.n; t.cargo=d.c||""; t.tel=d.t||""; t.email=d.e||"";
+      t.redes=d.r||{}; if(d.f)t.foto=d.f;
+      if(s)t.sedeId=s.id;
+      if(!ya)D.tarjetas.push(t);
+      D.tarjetasCambio=Date.now();
+      save(); closeModal(); renderEquipo(); renderInicio();
+    };
+  };
+}
+
+/* ---------- panel de control ---------- */
+function faltaDe(t){
+  const f=[];
+  if(!t.foto)f.push("foto");
+  if(!t.tel)f.push("teléfono");
+  if(!t.email)f.push("correo");
+  if(!Object.keys(t.redes||{}).length)f.push("redes");
+  return f;
+}
+function panelTarjetas(){
+  const n=D.tarjetas.length;
+  const listas=D.tarjetas.filter(t=>faltaDe(t).length===0).length;
+  const pend=(D.tarjetasCambio||0)>(D.tarjetasGen||0);
+  return '<div class="panel">'+
+    '<div class="pk"><span>Tarjetas</span><b>'+n+'</b></div>'+
+    '<div class="pk"><span>Completas</span><b>'+listas+'</b></div>'+
+    '<div class="pk"><span>Publicadas</span><b>'+(D.tarjetasGen?
+      "sí":"no")+'</b></div>'+
+    '</div>'+
+    (pend?'<div class="aviso2"><b>Has cambiado tarjetas desde la última vez que publicaste.</b><br>'+
+      'Genera la página en Bienvenida y súbela para que los QR muestren lo nuevo.</div>':'');
+}
+
 function renderEquipo(){
   const orden=D.tarjetas.slice().sort((a,b)=>(b.id===D.defecto)-(a.id===D.defecto));
-  $("eqBody").innerHTML=orden.length?'<div class="card">'+orden.map(t=>
-    '<div class="li">'+(t.foto?'<img class="av" src="'+t.foto+'" alt="">':'<div class="av">'+esc(ini(t.nombre))+'</div>')+
-    '<div class="nm"><b>'+esc(t.nombre)+'</b><span>'+esc(t.cargo||"")+' · '+esc(sede(t.sedeId).nombre)+
-      (t.id===D.defecto?" · mi tarjeta":"")+'</span></div>'+
-    '<button class="btn ghost" data-ver="'+t.id+'">Abrir</button>'+
-    '<button class="btn" data-qr="'+t.id+'">QR</button></div>').join("")+'</div>'
-    :'<div class="empty">Todavía no hay tarjetas.</div>';
+  $("eqBody").innerHTML=(orden.length?panelTarjetas():"")+
+    (orden.length?'<div class="card">'+orden.map(t=>{
+      const f=faltaDe(t);
+      return '<div class="li">'+(t.foto?'<img class="av" src="'+t.foto+'" alt="">':'<div class="av">'+esc(ini(t.nombre))+'</div>')+
+      '<div class="nm"><b>'+esc(t.nombre)+'</b><span>'+esc(t.cargo||"")+' · '+esc(sede(t.sedeId).nombre)+
+        (t.id===D.defecto?" · mi tarjeta":"")+
+        (f.length?'<br><span style="color:#b9761a">falta '+f.join(", ")+'</span>':
+          '<br><span style="color:#2f7d4f">completa</span>')+'</span></div>'+
+      '<button class="btn ghost" data-ver="'+t.id+'">Abrir</button>'+
+      '<button class="btn" data-qr="'+t.id+'">QR</button></div>'}).join("")+'</div>'
+    :'<div class="empty">Todavía no hay tarjetas.</div>');
 }
 $("eqBody").addEventListener("click",e=>{
   const v=e.target.closest("[data-ver]"), q=e.target.closest("[data-qr]");
@@ -722,6 +839,7 @@ $("eqBody").addEventListener("click",e=>{
   if(q)abrirQR(tarj(q.dataset.qr));
 });
 $("eqNueva").onclick=()=>editTarjeta(null);
+$("eqImp").onclick=importarFicha;
 
 function renderSedes(){
   $("sedesBody").innerHTML=D.sedes.map(s=>
@@ -1129,7 +1247,7 @@ function renderBienv(){
   $("bEd").onclick=editBienv;
   $("bGenT").onclick=()=>{
     if(!baseWeb()){alert("Pon antes la dirección web en Ajustes.");return}
-    generarTarjetas();
+    generarTarjetas(); D.tarjetasGen=Date.now(); save();
     openModal('<header><h2>Página generada</h2>'+
       '<button class="x" onclick="closeModal()" aria-label="Cerrar">×</button></header>'+
       '<p style="font-size:14px;margin:0 0 8px">Se ha descargado <b>tarjeta.html</b>.</p>'+
@@ -2017,6 +2135,7 @@ function editTarjeta(id){
     if(quitar)t.foto="";
     else if(CR.img&&CR.tocada)t.foto=cropSalida(280)||t.foto;
     if(!id)D.tarjetas.push(t);
+    D.tarjetasCambio=Date.now();
     save();closeModal();renderInicio();renderEquipo();
     if(pane==="mia"){verId=t.id;renderTarjeta()}
   };
@@ -2124,7 +2243,7 @@ $("wipeBtn").onclick=()=>{
   D=JSON.parse(JSON.stringify(SEED));save();renderInicio();ir("inicio");
 };
 
-const VERSION="1.2", FECHA="6 de septiembre de 2026";
+const VERSION="1.3", FECHA="6 de septiembre de 2026";
 let hayNueva=null;
 
 function bannerNueva(v){
