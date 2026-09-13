@@ -9,12 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#031329">
 <title>El Rey Jesús Oviedo · Iglesia cristiana evangélica en Asturias</title>
-<meta name="description" content="Iglesia cristiana evangélica con sedes en Oviedo, La Felguera, Gijón, Grado y Cangas de Onís. Horarios, direcciones y contacto.">
+<meta name="description" content="Iglesia cristiana evangélica en Oviedo, con Centros de Gloria en Gijón, Sama de Langreo y Cangas de Onís. Horarios, direcciones y contacto.">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="El Rey Jesús Oviedo">
 <meta property="og:title" content="El Rey Jesús Oviedo · Iglesia cristiana evangélica">
-<meta property="og:description" content="Iglesia cristiana evangélica con sedes en Oviedo, La Felguera, Gijón, Grado y Cangas de Onís. Horarios, direcciones y contacto.">
+<meta property="og:description" content="Iglesia cristiana evangélica en Oviedo, con Centros de Gloria en Gijón, Sama de Langreo y Cangas de Onís. Horarios, direcciones y contacto.">
 <meta property="og:image" content="icon-512.png">
 <meta property="og:locale" content="es_ES">
 <meta name="twitter:card" content="summary">
@@ -141,10 +141,14 @@ p{margin:0 0 14px}
 .evc h4{font-size:21px;font-weight:600;margin:0 0 4px;color:var(--navy);line-height:1.2}
 .evc .fecha{font-size:15px;color:var(--blue);font-weight:500;margin:0 0 6px}
 .evc .txt{font-size:14px;color:#3c5468;margin:0;line-height:1.5}
+.evc .aporte{display:inline-block;font-size:13px;font-weight:600;color:var(--navy);
+  background:var(--ice2);border:1px solid var(--line);border-radius:99px;
+  padding:4px 12px;margin:0 0 8px}
 .evc .bts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.evc .bts button{flex:1;min-width:96px;border:1px solid var(--line2);border-radius:10px;
-  padding:11px 8px;font-size:13.5px;font-weight:600;background:#fff;color:var(--navy);cursor:pointer}
-.evc .bts .pri{background:#25D366;color:#0b3d1e}
+.evc .bts button,.evc .bts a{flex:1;min-width:110px;border:1px solid var(--line2);border-radius:10px;
+  padding:11px 8px;font-size:13.5px;font-weight:600;background:#fff;color:var(--navy);
+  cursor:pointer;text-align:center;text-decoration:none;font-family:inherit}
+.evc .bts .pri{background:var(--blue);color:#fff;border-color:var(--blue)}
 .dest{background:var(--deep);color:#fff;border-radius:18px;overflow:hidden;
   display:grid;grid-template-columns:280px minmax(0,1fr);gap:0;align-items:stretch}
 @media(max-width:700px){.dest{grid-template-columns:1fr}}
@@ -463,8 +467,8 @@ const DATOS={
   "valores":["La Palabra en el centro","Familia antes que programa","Cada persona con un lugar","Servir a nuestra ciudad"],
   "pastores":"Pastores Genilson Santiago y Taiala Santiago",
   "pastoresPie":"Al frente de la iglesia en Asturias",
-  "dondeTit":"Cinco sedes en Asturias",
-  "dondeIntro":"Ven a la que te quede más cerca. Si no sabes cuál elegir, escríbenos y te orientamos.",
+  "dondeTit":"Nuestros Centros de Gloria",
+  "dondeIntro":"La iglesia está en Oviedo y tenemos Centros de Gloria en Gijón, Sama y Cangas de Onís. Ven al que te quede más cerca.",
   "esperarTit":"Qué te vas a encontrar",
   "esperar1":"La reunión dura algo más de una hora. Aquí se viene como uno es, y así es como se le recibe. Hay sitio para los niños y siempre encontrarás a alguien en la puerta para orientarte.",
   "esperar2":"No se pasa lista, nadie te va a señalar y no tienes que hacer nada que no quieras. Puedes venir, sentarte al fondo y marcharte sin dar explicaciones. Y si quieres quedarte a tomar algo después, mejor.",
@@ -481,8 +485,8 @@ const DATOS={
        "r":"Nos reunimos cada semana. En la sección de horarios verás los días y las horas de cada sede.",
        "ir":"#semana","irTxt":"Ver los horarios"},
       {"q":"¿Dónde estáis?",
-       "r":"Tenemos cinco sedes en Asturias. La principal está en Oviedo, en Calle Jardín 12.",
-       "ir":"#donde","irTxt":"Ver las sedes"},
+       "r":"La iglesia está en Oviedo, en Calle Jardín 12, y tenemos Centros de Gloria en Gijón, Sama de Langreo y Cangas de Onís.",
+       "ir":"#donde","irTxt":"Ver los centros"},
       {"q":"Quiero venir por primera vez",
        "r":"Nos alegra mucho. No hace falta avisar ni traer nada: ven y siéntate donde quieras. Siempre hay alguien en la puerta para orientarte.",
        "ir":"#esperar","irTxt":"Qué me voy a encontrar",
@@ -511,17 +515,31 @@ const DATOS={
   "eventos":[
     {"id":"e1","titulo":"Conferencia Gloria Postrera","desde":"2026-10-23","hasta":"2026-10-24",
      "hora":"","sede":"Oviedo","quien":"Anfitriones: Pr. Genilson Santiago y Prª Taiala Santiago · Invitados: Apóst. Dublas Rodríguez y Profet. Jessica Rodríguez",
-     "cartel":"evento-1.jpg","texto":"Dos días de conferencia con invitados. Entrada libre."},
+     "cartel":"evento-1.jpg","frase":"Dos días que no querrás perderte","aporte":"Donativo de 30 €","tel":"642230278","telNombre":"Tiffanny","oculto":false,"texto":"Dos días de conferencia con invitados.",
+     "invitados":[
+       {"n":"Apóstol Dublas Rodríguez","r":"Ministerio Internacional El Rey Jesús · Miami","web":"https://www.instagram.com/apostoldublasrodriguez/"},
+       {"n":"Profeta Jessica Rodríguez","r":"Ministerio Internacional El Rey Jesús · Miami"}
+     ]},
     {"id":"e4","titulo":"Retiro de sanidad interior y liberación","desde":"2026-09-19","hasta":"",
      "hora":"9:00","sede":"Oviedo","quien":"",
-     "cartel":"evento-retiro-sanidad.jpg","texto":"Un día completo. Calle Jardín 12, La Corredoria."}
+     "cartel":"evento-retiro-sanidad.jpg","frase":"Dios tiene algo para ti ese día","tel":"","telNombre":"","oculto":false,"texto":"Un día completo. Calle Jardín 12, La Corredoria."}
   ],
   "sedes":[
-    {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, 33011 Oviedo","tel":"629793800","hor":[["Culto general","domingo 11:00","reunion-culto-general.jpg"],["Culto de oración","martes 20:00","reunion-culto-de-oracion.jpg"]],"img":"sede-oviedo.jpg"},
-    {"n":"Gijón","dir":"","tel":"","hor":[],"img":"sede-gijon.jpg"},
-    {"n":"La Felguera","dir":"Avenida de la Constitución, frente al 46, Sama de Langreo","tel":"","hor":[["Reunión general","miércoles 20:00","reunion-reunion-general.jpg"]],"img":"sede-la-felguera.jpg"},
-    {"n":"Grado","dir":"","tel":"","hor":[["Reunión general","miércoles 20:00","reunion-reunion-general.jpg"]],"img":"sede-grado.jpg"},
-    {"n":"Cangas de Onís","dir":"","tel":"","hor":[["Reunión general","lunes 20:00","reunion-reunion-general.jpg"],["Oración","miércoles 20:00","reunion-culto-de-oracion.jpg"]],"img":"sede-cangas-de-onis.jpg"}
+    {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, La Corredoria, 33011 Oviedo","tel":"629793800",
+     "hor":[["Servicio familiar","domingo 11:00","reunion-culto-general.jpg"],
+            ["Casa de Oración","martes 20:00","reunion-culto-de-oracion.jpg"]],
+     "img":"sede-oviedo.jpg"},
+    {"n":"Gijón","dir":"Calle Roncal 4, Gijón","tel":"",
+     "hor":[["Servicio familiar","domingo 18:00","reunion-culto-general.jpg"],
+            ["Oración","martes 17:00","reunion-culto-de-oracion.jpg"]],
+     "img":"sede-gijon.jpg"},
+    {"n":"Sama","dir":"Calle Constitución 52, Sama de Langreo","tel":"",
+     "hor":[["Servicio","miércoles 20:00","reunion-reunion-general.jpg"]],
+     "img":"sede-sama.jpg"},
+    {"n":"Cangas de Onís","dir":"Calle Rey Alfonso 12, bajo, Cangas de Onís","tel":"",
+     "hor":[["Servicio familiar","lunes 20:00","reunion-culto-general.jpg"],
+            ["Casa de Oración","miércoles 18:30","reunion-culto-de-oracion.jpg"]],
+     "img":"sede-cangas-de-onis.jpg"}
   ]
 };
 /*FIN_DATOS*/
@@ -545,7 +563,7 @@ function fechaTxt(e){
 }
 function futuros(){
   const hoy=new Date(); hoy.setHours(0,0,0,0);
-  return (DATOS.eventos||[]).filter(e=>{
+  return (DATOS.eventos||[]).filter(e=>!e.oculto).filter(e=>{
     const f=(e.hasta||e.desde).split("-");
     return new Date(+f[0],+f[1]-1,+f[2],23,59) >= hoy;
   }).sort((a,b)=>a.desde.localeCompare(b.desde));
@@ -563,7 +581,7 @@ async function comparte(id){
 function preguntaEvento(id){
   const e=(DATOS.eventos||[]).find(x=>x.id===id); if(!e)return;
   const s=DATOS.sedes.find(x=>x.n===e.sede)||{};
-  const n=((s.tel||DATOS.tel)+"").replace(/[^0-9]/g,"");
+  const n=((e.tel||s.tel||DATOS.tel)+"").replace(/[^0-9]/g,"");
   window.open("https://wa.me/34"+n+"?text="+
     encodeURIComponent("Hola, me interesa "+e.titulo+" ("+fechaTxt(e)+"). ¿Me contáis más?"),
     "_blank","noopener");
@@ -676,9 +694,10 @@ function pintaEventos(){
         (dis?'<span class="cuando-b">'+esc(dis)+'</span>':'')+
         '<h4>'+esc(e.titulo)+'</h4>'+
         '<p class="fecha">'+esc(fechaTxt(e))+(e.sede?" · "+esc(e.sede):"")+'</p>'+
+        (e.aporte?'<p class="aporte">'+esc(e.aporte)+'</p>':'')+
         (e.texto?'<p class="txt">'+esc(e.texto)+'</p>':'')+
-        '<div class="bts"><button class="pri" onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button>'+
-        '<button onclick="comparte(\''+e.id+'\')">Compartir</button></div>'+
+        '<div class="bts"><a class="pri" href="evento.html?e='+encodeURIComponent(e.id)+'">Más información</a>'+
+        '<button onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button></div>'+
       '</div></article>'}).join("")+'</div>'+
     (fs.length>1?'<div class="pastnav" id="evPuntos">'+fs.map((e,i)=>
       '<button'+(i?'':' aria-current="true"')+' data-e="'+i+'">'+esc(e.titulo)+'</button>').join("")+'</div>':'');
@@ -785,7 +804,7 @@ function pintaSedes(){
     '<article class="sdc'+(i===0?" foco":"")+'">'+
       (s.img?'<img src="'+esc(s.img)+'" alt="'+esc(s.n)+'" loading="'+(i<2?"eager":"lazy")+'" onerror="this.remove()">':'')+
       '<div class="cuerpo">'+
-        '<div class="et">'+(s.pri?"Iglesia principal":"Sede")+'</div>'+
+        '<div class="et">'+(s.pri?"Iglesia":"Centro de Gloria")+'</div>'+
         '<h4>'+esc(s.n)+'</h4>'+
         '<p class="dir">'+(s.dir?esc(s.dir):"Escríbenos y te decimos la dirección")+'</p>'+
         (s.hor.length?'<div class="hors">'+s.hor.map(x=>
@@ -819,7 +838,7 @@ function preguntaSede(n){
   const s=SEDES.find(x=>x.n===n)||{};
   const t=((s.tel||DATOS.tel)+"").replace(/[^0-9]/g,"");
   window.open("https://wa.me/34"+t+"?text="+
-    encodeURIComponent("Hola, me interesa la sede de "+n+". ¿Me contáis horarios y dirección?"),
+    encodeURIComponent("Hola, me interesa el centro de "+n+". ¿Me contáis horarios y dirección?"),
     "_blank","noopener");
 }
 const p=new URLSearchParams(location.search).get("sede");
@@ -856,7 +875,9 @@ function pintaProxima(){
   }));
   if(!lista.length){barra.innerHTML="<b>Escríbenos</b>Te decimos horarios y direcciones";return}
   const min=Math.min.apply(null,lista.map(x=>x.dif));
-  const prox=lista.filter(x=>x.dif===min);
+  const mismoDia=lista.filter(x=>x.dif===min);
+  const hora=mismoDia.map(x=>x.hora).sort()[0];
+  const prox=mismoDia.filter(x=>x.hora===hora);
   const sedes=prox.map(x=>x.sede);
   const nombres=sedes.length>1?sedes.slice(0,-1).join(", ")+" y "+sedes[sedes.length-1]:sedes[0];
   const cuando=min===0?"hoy":min===1?"mañana":"el "+DIASV[prox[0].d];
@@ -978,7 +999,7 @@ function abreEditor(){
     recoge();
     DATOS.eventos=DATOS.eventos||[];
     DATOS.eventos.push({id:"e"+Date.now().toString(36),titulo:"Evento nuevo",
-      desde:new Date().toISOString().slice(0,10),hasta:"",hora:"",sede:"",texto:"",quien:"",cartel:""});
+      desde:new Date().toISOString().slice(0,10),hasta:"",hora:"",sede:"",frase:"",aporte:"",tel:"",telNombre:"",oculto:false,texto:"",quien:"",cartel:""});
     cierra(); abreEditor();
     setTimeout(()=>{const c=$("modal").querySelector(".edcampos");if(c)c.scrollTop=c.scrollHeight},60);
   };
@@ -1009,12 +1030,19 @@ function abreEditor(){
 }
 function pintaEdEventos(){
   return (DATOS.eventos||[]).map((e,i)=>'<div class="edsede" data-ev="'+i+'">'+
-    '<b>'+esc(e.titulo||"Evento nuevo")+'</b>'+
+    '<b>'+esc(e.titulo||"Evento nuevo")+(e.oculto?' <span style="font-size:12px;color:#b9761a;font-weight:400">sin publicar</span>':'')+'</b>'+
     '<label>Título</label><input type="text" id="ev_t'+i+'" value="'+esc(e.titulo||"")+'">'+
     '<div class="edfila"><div><label>Desde</label><input type="date" id="ev_d'+i+'" value="'+esc(e.desde||"")+'"></div>'+
     '<div><label>Hasta</label><input type="date" id="ev_h'+i+'" value="'+esc(e.hasta||"")+'"></div>'+
     '<div><label>Hora</label><input type="text" id="ev_o'+i+'" value="'+esc(e.hora||"")+'" placeholder="20:00"></div></div>'+
     '<label>Sede</label><input type="text" id="ev_s'+i+'" value="'+esc(e.sede||"")+'">'+
+    '<label>Frase de gancho</label><input type="text" id="ev_f'+i+'" value="'+esc(e.frase||"")+'" placeholder="No te lo pierdas">'+
+    '<label>Donativo o entrada</label><input type="text" id="ev_a'+i+'" value="'+esc(e.aporte||"")+'" placeholder="Donativo de 30 € · Entrada libre">'+
+    '<div class="edfila"><div><label>Teléfono de información</label><input type="text" id="ev_tl'+i+'" value="'+esc(e.tel||"")+'" placeholder="vacío = el de la iglesia"></div>'+
+    '<div><label>A nombre de</label><input type="text" id="ev_tn'+i+'" value="'+esc(e.telNombre||"")+'" placeholder="Tiffanny"></div></div>'+
+    '<label style="display:flex;gap:9px;align-items:center;margin-top:12px;color:var(--ink);font-size:14px">'+
+      '<input type="checkbox" id="ev_p'+i+'" style="width:auto"'+(e.oculto?"":" checked")+
+      '> Mostrarlo en la portada</label>'+
     '<label>Texto</label><input type="text" id="ev_x'+i+'" value="'+esc(e.texto||"")+'">'+
     '<label>Quién participa</label><input type="text" id="ev_q'+i+'" value="'+esc(e.quien||"")+'">'+
     '<label>Cartel, nombre del archivo</label><input type="text" id="ev_c'+i+'" value="'+esc(e.cartel||"")+'" placeholder="evento-2.jpg">'+
@@ -1050,6 +1078,11 @@ function recoge(){
     e.desde=$("ev_d"+i).value; e.hasta=$("ev_h"+i).value;
     e.hora=$("ev_o"+i).value.trim(); e.sede=$("ev_s"+i).value.trim();
     e.texto=$("ev_x"+i).value.trim(); e.quien=$("ev_q"+i).value.trim();
+    e.frase=$("ev_f"+i)?$("ev_f"+i).value.trim():(e.frase||"");
+    e.aporte=$("ev_a"+i)?$("ev_a"+i).value.trim():(e.aporte||"");
+    e.tel=$("ev_tl"+i)?$("ev_tl"+i).value.trim():(e.tel||"");
+    e.telNombre=$("ev_tn"+i)?$("ev_tn"+i).value.trim():(e.telNombre||"");
+    e.oculto=$("ev_p"+i)?!$("ev_p"+i).checked:!!e.oculto;
     e.cartel=$("ev_c"+i).value.trim();
   });
   DATOS.eventos=(DATOS.eventos||[]).filter(e=>e.titulo&&e.desde);

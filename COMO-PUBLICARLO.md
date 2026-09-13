@@ -18,7 +18,7 @@ Sube estos diecinueve, todos juntos y sin cambiarles el nombre:
 | `pastores-foto.jpg` | Foto de los pastores. Si no existe, sale el logo. |
 | `sede-oviedo.jpg` · `sede-gijon.jpg` · `sede-la-felguera.jpg` · `sede-grado.jpg` · `sede-cangas-de-onis.jpg` | Imagen de cada sede en su carrusel. |
 | `reunion-culto-general.jpg` · `reunion-culto-de-oracion.jpg` · `reunion-reunion-general.jpg` | Carteles de las reuniones semanales. |
-| `evento-1.jpg` · `evento-2.jpg` · `evento-3.jpg` | Carteles de los eventos. El 2 y el 3 son de relleno: cámbialos por los vuestros. |
+| `evento-1.jpg` · `evento-retiro-sanidad.jpg` | Carteles de los eventos. El nombre lo eliges tú en el editor. |
 | `guia.html` | La guía para presentar a los líderes. |
 | `bienvenida.html` | Lo que ve quien escanea un cartel. |
 | `tarjeta.html` | La tarjeta pública de cada líder. |
@@ -165,6 +165,35 @@ Culto general | domingo 11:00 | reunion-culto-general.jpg
 Nombre, día y hora, y el cartel. El cartel es opcional. De ahí salen la franja
 azul de horarios, el aviso de la próxima reunión y los horarios de cada tarjeta
 de sede.
+
+## El asistente
+
+Abajo a la derecha hay un botón redondo con el logo. Al tocarlo se abre una
+ventana con seis preguntas y sus respuestas, que llevan a la sección
+correspondiente o a WhatsApp.
+
+Se abre solo a los treinta segundos la primera vez. Si alguien lo cierra, ya no
+vuelve a abrirse solo en ese dispositivo, y aparece un aviso indicando dónde está
+el botón por si quiere volver.
+
+El saludo y las respuestas se cambian desde el editor oculto, en la sección
+*Asistente*.
+
+**Una respuesta que conviene no tocar:** la de «Necesito oración» incluye un aviso
+con el teléfono 024, la línea de atención a la conducta suicida. Está ahí a
+propósito, por si alguien escribe en un momento malo.
+
+## Activar los donativos
+
+En el editor oculto, sección *Colabora*, hay cuatro campos: número de Bizum,
+IBAN, titular de la cuenta y enlace de pago con tarjeta.
+
+La sección solo aparece en la web si rellenas al menos uno. Si los dejas los tres
+en blanco, ni la sección ni el enlace del menú se muestran.
+
+Para el pago con tarjeta hace falta un enlace de una pasarela, por ejemplo de
+Stripe o del TPV virtual del banco. Se crea en el panel de esa pasarela y aquí
+solo se pega. **Los datos de tarjeta nunca pasan por esta web.**
 
 ## Cambiar las fotos de la web
 
