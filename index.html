@@ -474,7 +474,7 @@ const DATOS={
   "esperar2":"No se pasa lista, nadie te va a señalar y no tienes que hacer nada que no quieras. Puedes venir, sentarte al fondo y marcharte sin dar explicaciones. Y si quieres quedarte a tomar algo después, mejor.",
   "contactoIntro":"Déjanos tu nombre y elige la sede que te quede cerca. Se abrirá WhatsApp con el mensaje preparado y tú decides si lo envías.",
   "tel":"629793800",
-  "direccion":"Calle Jardín 12, 33011 Oviedo",
+  "direccion":"Calle Jardín 12, La Corredoria, 33011 Oviedo",
   "instagram":"https://instagram.com/migrreyjesusasturias",
   "facebook":"https://www.facebook.com/search/top?q=Migr%20rey%20Jes%C3%BAs%20asturias",
   "asistente":{
@@ -515,7 +515,7 @@ const DATOS={
   "eventos":[
     {"id":"e1","titulo":"Conferencia Gloria Postrera","desde":"2026-10-23","hasta":"2026-10-24",
      "hora":"","sede":"Oviedo","quien":"Anfitriones: Pr. Genilson Santiago y Prª Taiala Santiago · Invitados: Apóst. Dublas Rodríguez y Profet. Jessica Rodríguez",
-     "cartel":"evento-1.jpg","frase":"Dos días que no querrás perderte","aporte":"Donativo de 30 €","tel":"642230278","telNombre":"Tiffanny","oculto":false,"texto":"Dos días de conferencia con invitados.",
+     "cartel":"evento-1.jpg","frase":"Dos días que no querrás perderte","aporte":"Donativo de 30 €","tel":"","telNombre":"","oculto":false,"texto":"Dos días de conferencia con invitados.",
      "invitados":[
        {"n":"Apóstol Dublas Rodríguez","r":"Ministerio Internacional El Rey Jesús · Miami","web":"https://www.instagram.com/apostoldublasrodriguez/"},
        {"n":"Profeta Jessica Rodríguez","r":"Ministerio Internacional El Rey Jesús · Miami"}
@@ -1039,7 +1039,7 @@ function pintaEdEventos(){
     '<label>Frase de gancho</label><input type="text" id="ev_f'+i+'" value="'+esc(e.frase||"")+'" placeholder="No te lo pierdas">'+
     '<label>Donativo o entrada</label><input type="text" id="ev_a'+i+'" value="'+esc(e.aporte||"")+'" placeholder="Donativo de 30 € · Entrada libre">'+
     '<div class="edfila"><div><label>Teléfono de información</label><input type="text" id="ev_tl'+i+'" value="'+esc(e.tel||"")+'" placeholder="vacío = el de la iglesia"></div>'+
-    '<div><label>A nombre de</label><input type="text" id="ev_tn'+i+'" value="'+esc(e.telNombre||"")+'" placeholder="Tiffanny"></div></div>'+
+    '<div><label>A nombre de</label><input type="text" id="ev_tn'+i+'" value="'+esc(e.telNombre||"")+'" placeholder="nombre de contacto"></div></div>'+
     '<label style="display:flex;gap:9px;align-items:center;margin-top:12px;color:var(--ink);font-size:14px">'+
       '<input type="checkbox" id="ev_p'+i+'" style="width:auto"'+(e.oculto?"":" checked")+
       '> Mostrarlo en la portada</label>'+
