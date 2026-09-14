@@ -89,7 +89,7 @@ input.mal{border-color:#a8352e}
   <div class="priv">
     <b>Qué pasa con tus respuestas</b>
     <p>Este cuestionario <b>no guarda nada en internet</b>. Lo que escribes se queda en tu móvil mientras lo rellenas.</p>
-    <p>Al terminar se crea un informe en PDF que <b>tú envías</b> por WhatsApp a la persona responsable. Solo ella lo va a leer, y lo borra una vez estudiado.</p>
+    <p>Al terminar se crea un informe en PDF que <b>tú envías</b> por WhatsApp al equipo de administración. Solo ellos lo van a leer, y lo borran una vez estudiado.</p>
     <p>De datos personales solo se recogen <b>tu nombre y tu teléfono</b>, que hacen falta para poder contactar contigo. El resto de preguntas puedes saltarlas si no te encajan.</p>
     <button class="mas" id="verMas" aria-expanded="false">Ver el detalle</button>
     <div class="detalle" id="detalle" hidden>
@@ -98,7 +98,7 @@ input.mal{border-color:#a8352e}
       <p><b>Qué datos.</b> Nombre y apellidos y teléfono. El resto de respuestas son sobre tus
         dones y tu disponibilidad.</p>
       <p><b>Para qué.</b> Únicamente para acompañarte y ayudarte a encontrar dónde servir.</p>
-      <p><b>Quién los ve.</b> Una sola persona responsable. No se ceden a nadie ni se publican.</p>
+      <p><b>Quién los ve.</b> Solo el equipo de administración de la iglesia. No se ceden a nadie ni se publican.</p>
       <p><b>Cuánto tiempo.</b> Se borran una vez estudiados.</p>
       <p><b>Tus derechos.</b> Puedes pedir ver, corregir o borrar tus datos cuando quieras,
         escribiendo al 629 79 38 00. Y puedes retirar este permiso en cualquier momento.</p>
@@ -107,8 +107,8 @@ input.mal{border-color:#a8352e}
   <label class="acepto" id="lblOk1">
     <input type="checkbox" id="ok1">
     <span>Autorizo a la iglesia El Rey Jesús Oviedo a tratar mi nombre y mi teléfono con el único
-      fin de acompañarme y ayudarme a encontrar dónde servir. Sé que los verá solo la persona
-      responsable y que los borrará una vez estudiados.</span>
+      fin de acompañarme y ayudarme a encontrar dónde servir. Sé que los verá solo el equipo de
+      administración de la iglesia y que los borrará una vez estudiados.</span>
   </label>
   <button class="btn pri" id="empezar">Empezar</button>
   <button class="btn fant" id="seguir" hidden>Seguir donde lo dejé</button>
@@ -511,7 +511,7 @@ function informe(){
       {size:8,negrita:true,color:[0.35,0.55,0.7],despues:3});
   }
   d.texto("Generado en el móvil de la persona. No se ha guardado en ningún servidor. "+
-          "Trátalo con discreción y bórralo cuando ya no haga falta.",
+          "Para uso interno del equipo de administración. Bórralo cuando ya no haga falta.",
           {size:8,color:GRIS});
   return d.salida();
 }
@@ -530,7 +530,7 @@ $("descargar").onclick=()=>{ bajar(informe(),nombreArchivo()); };
 $("enviar").onclick=async()=>{
   if(!$("ok").checked){ $("notaEnvio").textContent="Marca la casilla para poder enviarlo."; return }
   const blob=informe(), nombre=nombreArchivo();
-  const texto="Hola, te envío mi cuestionario de dones y servicio."+
+  const texto="Hola, os envío mi cuestionario de dones y servicio."+
     (RESP.nombre?" Soy "+RESP.nombre+".":"");
   try{
     const f=new File([blob],nombre,{type:"application/pdf"});
