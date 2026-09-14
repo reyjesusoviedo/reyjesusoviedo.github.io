@@ -94,8 +94,8 @@ input.mal{border-color:#a8352e}
   <p class="sub">Unas preguntas para conocerte mejor y ayudarte a encontrar tu sitio en la iglesia. Se tarda unos tres minutos.</p>
   <div class="priv">
     <b>Qué pasa con tus respuestas</b>
-    <p>Tus respuestas se guardan en una base de datos de la iglesia alojada en la Unión Europea, a la que solo accede el equipo de administración.</p>
-    <p>Al enviarlas les llegan directamente. Solo ellos las leen, y las borran una vez estudiadas.</p>
+    <p>Este cuestionario <b>no guarda nada en internet</b>. Lo que escribes se queda en tu móvil mientras lo rellenas.</p>
+    <p>Al terminar se crea un informe en PDF que <b>tú envías</b> por WhatsApp al equipo de administración. Solo ellos lo van a leer, y lo borran una vez estudiado.</p>
     <p>De datos personales solo se recogen <b>tu nombre y tu teléfono</b>, que hacen falta para poder contactar contigo. El resto de preguntas puedes saltarlas si no te encajan.</p>
     <button class="mas" id="verMas" aria-expanded="false">Ver el detalle</button>
     <div class="detalle" id="detalle" hidden>
@@ -105,7 +105,7 @@ input.mal{border-color:#a8352e}
         dones y tu disponibilidad.</p>
       <p><b>Para qué.</b> Únicamente para acompañarte y ayudarte a encontrar dónde servir.</p>
       <p><b>Quién los ve.</b> Solo el equipo de administración de la iglesia. No se ceden a nadie ni se publican.</p>
-      <p><b>Dónde se guardan.</b> En un servidor de la Unión Europea contratado por la iglesia, protegido con contraseña.</p><p><b>Cuánto tiempo.</b> Se borran una vez estudiados.</p>
+      <p><b>Cuánto tiempo.</b> Se borran una vez estudiados.</p>
       <p><b>Tus derechos.</b> Puedes pedir ver, corregir o borrar tus datos cuando quieras,
         escribiendo al 629 79 38 00. Y puedes retirar este permiso en cualquier momento.</p>
     </div>
@@ -133,13 +133,7 @@ input.mal{border-color:#a8352e}
 <div class="pant" id="p-fin">
   <h1>Ya está</h1>
   <p class="sub">Revisa que esté todo bien y envíalo. Si quieres cambiar algo, vuelve atrás.</p>
-  <div class="destino">
-    <span>Se envía al equipo de administración</span>
-    <b id="numDestino"></b>
-    <button id="copiaNum">Copiar el número</button>
-  </div>
   <div class="resumen" id="resumen"></div>
-  <label class="acepto"><input type="checkbox" id="ok"> He leído cómo se tratan mis respuestas y quiero enviarlas.</label>
   <button class="btn pri" id="enviar">Enviar al equipo de administración</button>
   <p class="nota" id="notaEnvio"></p>
   <button class="btn" id="porWhatsApp" hidden>Enviarlo por WhatsApp</button>
@@ -151,7 +145,7 @@ input.mal{border-color:#a8352e}
   <h1>Gracias</h1>
   <p class="devo" id="devo"></p>
   <p class="sub" id="txtGracias"></p>
-  
+  <p class="ayuda">Tus respuestas se han borrado de este móvil.</p>
   <button class="btn fant" id="otra">Rellenar otro</button>
 </div>
 
@@ -472,7 +466,6 @@ function bonito(t){
   return n.length===9 ? n.slice(0,3)+" "+n.slice(3,5)+" "+n.slice(5,7)+" "+n.slice(7) : n;
 }
 function fin(){
-  $("numDestino").textContent=bonito(TEL);
   $("lleno").style.width="100%";
   $("resumen").innerHTML=lista().map(p=>{
     const v=valor(p); if(!v)return "";
@@ -570,11 +563,6 @@ function bajar(blob,nombre){
   setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
 $("descargar").onclick=()=>{ bajar(informe(),nombreArchivo()); };
-$("copiaNum").onclick=()=>{
-  try{navigator.clipboard.writeText(TEL)}catch(e){}
-  $("copiaNum").textContent="Copiado";
-  setTimeout(()=>{try{$("copiaNum").textContent="Copiar el número"}catch(e){}},1600);
-};
 function filaSupabase(){
   return {
     nombre:RESP.nombre||"", tel:RESP.tel||"", sede:RESP.sede||null,
@@ -592,7 +580,6 @@ async function guardaEnLaNube(){
     headers:{"Prefer":"return=minimal"}, body:[filaSupabase()]});
 }
 $("enviar").onclick=async()=>{
-  if(!$("ok").checked){ $("notaEnvio").textContent="Marca la casilla para poder enviarlo."; return }
   const bt=$("enviar"); bt.disabled=true; bt.textContent="Enviando…";
   try{
     await guardaEnLaNube();
