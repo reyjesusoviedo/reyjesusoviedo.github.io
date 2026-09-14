@@ -2,7 +2,7 @@
   "app": "1.4",
   "cafeteria": "1.3",
   "fecha": "2026-09-06",
-  "novedades": "Dones: las respuestas se guardan en la base de datos de la iglesia y el equipo las consulta con su usuario.",
+  "novedades": "Fichas de dones en tabla, ordenable y con detalle desplegable.",
   "web": "2.5",
-  "dones": "2.0"
+  "dones": "2.1"
 }

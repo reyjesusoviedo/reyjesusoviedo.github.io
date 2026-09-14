@@ -56,35 +56,48 @@ h1{font-size:28px;font-weight:600;color:var(--navy);margin:0 0 4px}
 .filtros select{border:1px solid var(--line2);border-radius:11px;padding:11px 12px;background:#fff}
 .filtros button{border:1px solid var(--line2);background:#fff;color:var(--navy);
   border-radius:11px;padding:11px 15px;font-size:14px}
-.area{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 17px;margin-bottom:11px}
-.area h3{font-size:17px;font-weight:600;color:var(--navy);margin:0 0 8px}
-.area h3 span{font-size:13px;color:var(--soft);font-weight:400}
-.gente{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line2);background:var(--ice2);border-radius:99px;
-  padding:7px 14px;font-size:14px;color:var(--navy)}
-.chip.hecho{opacity:.5;text-decoration:line-through}
-.ficha{background:#fff;border:1px solid var(--line);border-radius:15px;
-  padding:15px 17px;margin-bottom:10px}
-.ficha.hecha{opacity:.62}
-.cab{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.cab b{font-size:18px;color:var(--navy);flex:1;min-width:150px}
-.cab .tel{font-size:14.5px}
-.cab .tel a{color:var(--blue);text-decoration:none}
-.meta{font-size:13.5px;color:var(--muted);margin:2px 0 10px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.tag{background:var(--ice2);border:1px solid var(--line);border-radius:99px;
-  padding:4px 11px;font-size:12.5px;color:#3c5468}
-.tag.area{background:#e6f1fb;border-color:#bcd9f5;color:#0e4c85;font-weight:500}
-.campo{font-size:14.5px;margin:6px 0 0}
+.tabla{width:100%;border-collapse:collapse;background:#fff;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tabla th{text-align:left;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--soft);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line);
+  white-space:nowrap;cursor:pointer;user-select:none}
+.tabla th.orden::after{content:" ▾";color:var(--blue)}
+.tabla th.orden.asc::after{content:" ▴"}
+.tabla th:last-child,.tabla td:last-child{text-align:right}
+.tabla td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14.5px;vertical-align:middle}
+.tabla tr.fila{cursor:pointer}
+.tabla tr.fila:hover td{background:var(--ice2)}
+.tabla tr.hecha td{color:var(--muted)}
+.tabla tr.hecha .nom{text-decoration:line-through}
+.nom{font-weight:600;color:var(--navy)}
+.tabla tr.hecha .nom{color:var(--muted)}
+.fl{display:inline-block;width:14px;color:var(--soft);transition:transform .2s}
+tr.abierta .fl{transform:rotate(90deg);color:var(--blue)}
+.tabla a.tel{color:var(--blue);text-decoration:none;white-space:nowrap}
+.mini{display:flex;flex-wrap:wrap;gap:5px}
+.mini span{background:#e6f1fb;border:1px solid #bcd9f5;color:#0e4c85;border-radius:99px;
+  padding:2px 9px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.detalle td{background:var(--ice2);padding:4px 16px 16px}
+.campo{font-size:14.5px;margin:10px 0 0}
 .campo i{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--soft);font-style:normal}
-.acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  color:var(--soft);font-style:normal;margin-bottom:1px}
+.acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .acc button,.acc a{border:1px solid var(--line2);background:#fff;color:var(--navy);
   border-radius:10px;padding:9px 14px;font-size:13.5px;text-decoration:none}
 .acc .wa{background:#25D366;border-color:#25D366;color:#0b3d1e;font-weight:600}
 .acc .del{color:var(--bad);border-color:#eebeb7}
 .nota{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;
-  font-size:14px;margin-top:10px;background:var(--ice2)}
+  font-size:14px;margin-top:12px;background:#fff}
+@media(max-width:760px){
+  .tabla thead{display:none}
+  .tabla,.tabla tbody,.tabla tr,.tabla td{display:block;width:100%}
+  .tabla tr.fila{border-bottom:1px solid var(--line);padding:4px 0}
+  .tabla tr.fila td{border:0;padding:3px 14px}
+  .tabla tr.fila td:first-child{padding-top:12px}
+  .tabla tr.fila td:last-child{text-align:left;padding-bottom:12px}
+  .tabla td[data-et]::before{content:attr(data-et) " · ";color:var(--muted);font-size:12.5px}
+  .tabla td.nocab[data-et]::before{content:""}
+}
 .vacio{text-align:center;color:var(--muted);padding:40px 20px}
 .cargando{text-align:center;color:var(--muted);padding:30px}
 .pie{text-align:center;color:var(--muted);font-size:12.5px;padding:10px 20px 30px;line-height:1.7}
@@ -222,9 +235,9 @@ async function carga(){
     $("cuerpo").innerHTML='<p class="vacio"><b>No se han podido cargar las fichas.</b><br>'+esc(e.message)+'</p>';
   }
 }
-let filtroTexto="", filtroArea="", verHechas=false;
+let filtroTexto="", filtroArea="", verHechas=false, orden="creado", asc=false, abierta=null;
 function visibles(){
-  return FICHAS.filter(f=>{
+  let v=FICHAS.filter(f=>{
     if(!verHechas && f.atendido)return false;
     if(filtroArea && areasDe(f).indexOf(filtroArea)<0)return false;
     if(filtroTexto){
@@ -234,6 +247,13 @@ function visibles(){
     }
     return true;
   });
+  const val=f=>({nombre:f.nombre||"",sede:f.sede||"",cuanto:f.cuanto||"",
+    creado:f.creado||""})[orden]||"";
+  v.sort((x,y)=>{
+    const a=val(x).toLowerCase(), b=val(y).toLowerCase();
+    return (a<b?-1:a>b?1:0)*(asc?1:-1);
+  });
+  return v;
 }
 function pinta(){
   if(!FICHAS.length){
@@ -241,70 +261,84 @@ function pinta(){
     return;
   }
   const v=visibles();
-  const porArea={};
-  FICHAS.filter(f=>!f.atendido).forEach(f=>areasDe(f).forEach(a=>{(porArea[a]=porArea[a]||[]).push(f)}));
   const pendientes=FICHAS.filter(f=>!f.atendido).length;
   const semana=FICHAS.filter(f=>!f.atendido&&/semana/i.test(f.cuanto||"")).length;
+  const conArea={};
+  FICHAS.filter(f=>!f.atendido).forEach(f=>areasDe(f).forEach(a=>conArea[a]=1));
 
   let h='<div class="kpis">'+
     '<div class="k"><span>Pendientes</span><b>'+pendientes+'</b></div>'+
     '<div class="k"><span>Atendidas</span><b>'+(FICHAS.length-pendientes)+'</b></div>'+
-    '<div class="k"><span>Áreas</span><b>'+Object.keys(porArea).length+'</b></div>'+
+    '<div class="k"><span>Áreas</span><b>'+Object.keys(conArea).length+'</b></div>'+
     '<div class="k"><span>Cada semana</span><b>'+semana+'</b></div></div>';
 
   h+='<div class="filtros">'+
-    '<input type="search" id="busca" placeholder="Buscar por nombre, sede o don…" value="'+esc(filtroTexto)+'">'+
+    '<input type="search" id="busca" placeholder="Buscar por nombre, centro o don…" value="'+esc(filtroTexto)+'">'+
     '<select id="selArea"><option value="">Todas las áreas</option>'+
       AREAS.map(a=>'<option value="'+esc(a.n)+'"'+(filtroArea===a.n?' selected':'')+'>'+esc(a.n)+'</option>').join("")+
     '</select>'+
     '<button id="verH">'+(verHechas?"Ocultar atendidas":"Ver atendidas")+'</button>'+
     '<button id="recargar">Actualizar</button></div>';
 
-  const orden=Object.keys(porArea).sort((a,b)=>porArea[b].length-porArea[a].length);
-  if(orden.length)h+=orden.map(a=>'<article class="area"><h3>'+esc(a)+
-    ' <span>'+porArea[a].length+'</span></h3><div class="gente">'+
-    porArea[a].map(f=>'<span class="chip">'+esc(f.nombre)+'</span>').join("")+
-    '</div></article>').join("");
+  const cab=[["nombre","Nombre"],["tel","Teléfono"],["sede","Centro"],["cuanto","Disponibilidad"]];
+  h+='<table class="tabla"><thead><tr>'+
+    cab.map(c=>'<th data-col="'+c[0]+'" class="'+(orden===c[0]?"orden"+(asc?" asc":""):"")+'">'+
+      c[1]+'</th>').join("")+'<th></th></tr></thead><tbody>';
 
-  h+='<h1 style="font-size:20px;margin:22px 0 10px">'+v.length+' ficha'+(v.length===1?"":"s")+'</h1>';
-  h+=v.map(f=>{
+  if(!v.length)h+='<tr><td colspan="5"><p class="vacio">Nada que mostrar con ese filtro.</p></td></tr>';
+  v.forEach(f=>{
     const ar=areasDe(f);
-    return '<article class="ficha'+(f.atendido?" hecha":"")+'" data-id="'+esc(f.id)+'">'+
-      '<div class="cab"><b>'+esc(f.nombre)+'</b>'+
-      '<span class="tel"><a href="tel:'+esc(f.tel)+'">'+esc(f.tel)+'</a></span></div>'+
-      '<p class="meta">'+esc(f.sede||"sin centro")+' · '+esc(f.tiempo||"")+
-        ' · llegó el '+fecha(f.creado)+'</p>'+
-      (ar.length?'<div class="tags">'+ar.map(a=>'<span class="tag area">'+esc(a)+'</span>').join("")+'</div>':'')+
-      '<div class="tags">'+
-        (f.cuanto?'<span class="tag">'+esc(f.cuanto)+'</span>':'')+
-        (f.dias||[]).map(d=>'<span class="tag">'+esc(d)+'</span>').join("")+
-      '</div>'+
-      (f.bien&&f.bien.length?'<p class="campo"><i>Se le da bien</i>'+esc(f.bien.join(", "))+'</p>':'')+
-      (f.disfruta&&f.disfruta.length?'<p class="campo"><i>Disfruta</i>'+esc(f.disfruta.join(", "))+'</p>':'')+
-      (f.aprender&&f.aprender.length?'<p class="campo"><i>Quiere aprender</i>'+esc(f.aprender.join(", "))+'</p>':'')+
-      (f.sirviendo?'<p class="campo"><i>Ya sirve en</i>'+esc(f.sirviendo)+'</p>':'')+
-      (f.puesto?'<p class="campo"><i>Le gustaría</i>'+esc(f.puesto)+'</p>':'')+
-      (f.abierta?'<p class="campo"><i>Nos cuenta</i>'+esc(f.abierta)+'</p>':'')+
-      '<textarea class="nota" data-nota="'+esc(f.id)+'" rows="2" '+
-        'placeholder="Nota del equipo…">'+esc(f.nota||"")+'</textarea>'+
-      '<div class="acc">'+
-        '<a class="wa" href="https://wa.me/34'+wa(f.tel)+'?text='+
-          encodeURIComponent("Hola "+f.nombre.split(" ")[0]+", te escribimos de la iglesia por lo que nos contaste sobre dónde te gustaría servir.")+
-          '" target="_blank" rel="noopener">Escribirle</a>'+
-        '<button data-hecho="'+esc(f.id)+'">'+(f.atendido?"Marcar pendiente":"Marcar atendida")+'</button>'+
-        '<button class="del" data-borra="'+esc(f.id)+'">Borrar</button>'+
-      '</div></article>';
-  }).join("")||'<p class="vacio">Nada que mostrar con ese filtro.</p>';
-
+    const ab=abierta===f.id;
+    h+='<tr class="fila'+(f.atendido?" hecha":"")+(ab?" abierta":"")+'" data-fila="'+esc(f.id)+'">'+
+      '<td class="nocab"><span class="fl">›</span> <span class="nom">'+esc(f.nombre)+'</span></td>'+
+      '<td data-et="Teléfono"><a class="tel" href="tel:'+esc(f.tel)+'" onclick="event.stopPropagation()">'+esc(f.tel)+'</a></td>'+
+      '<td data-et="Centro">'+esc(f.sede||"—")+'</td>'+
+      '<td data-et="Disponibilidad">'+esc(f.cuanto||"—")+'</td>'+
+      '<td><div class="mini">'+ar.slice(0,2).map(a=>'<span>'+esc(a)+'</span>').join("")+
+        (ar.length>2?'<span>+'+(ar.length-2)+'</span>':'')+'</div></td></tr>';
+    if(ab){
+      h+='<tr class="detalle"><td colspan="5">'+
+        '<p class="campo"><i>Llegó el</i>'+fecha(f.creado)+' · '+esc(f.tiempo||"")+'</p>'+
+        (ar.length?'<p class="campo"><i>Áreas</i><span class="mini" style="margin-top:3px">'+
+          ar.map(a=>'<span>'+esc(a)+'</span>').join("")+'</span></p>':'')+
+        ((f.dias||[]).length?'<p class="campo"><i>Días</i>'+esc(f.dias.join(", "))+'</p>':'')+
+        (f.bien&&f.bien.length?'<p class="campo"><i>Se le da bien</i>'+esc(f.bien.join(", "))+'</p>':'')+
+        (f.disfruta&&f.disfruta.length?'<p class="campo"><i>Disfruta</i>'+esc(f.disfruta.join(", "))+'</p>':'')+
+        (f.aprender&&f.aprender.length?'<p class="campo"><i>Quiere aprender</i>'+esc(f.aprender.join(", "))+'</p>':'')+
+        (f.sirviendo?'<p class="campo"><i>Ya sirve en</i>'+esc(f.sirviendo)+'</p>':'')+
+        (f.puesto?'<p class="campo"><i>Le gustaría</i>'+esc(f.puesto)+'</p>':'')+
+        (f.abierta?'<p class="campo"><i>Nos cuenta</i>'+esc(f.abierta)+'</p>':'')+
+        '<textarea class="nota" data-nota="'+esc(f.id)+'" rows="2" placeholder="Nota del equipo…">'+
+          esc(f.nota||"")+'</textarea>'+
+        '<div class="acc">'+
+          '<a class="wa" href="https://wa.me/34'+wa(f.tel)+'?text='+
+            encodeURIComponent("Hola "+f.nombre.split(" ")[0]+", te escribimos de la iglesia por lo que nos contaste sobre dónde te gustaría servir.")+
+            '" target="_blank" rel="noopener">Escribirle</a>'+
+          '<button data-hecho="'+esc(f.id)+'">'+(f.atendido?"Marcar pendiente":"Marcar atendida")+'</button>'+
+          '<button class="del" data-borra="'+esc(f.id)+'">Borrar</button>'+
+        '</div></td></tr>';
+    }
+  });
+  h+='</tbody></table>';
   $("cuerpo").innerHTML=h;
+
   $("busca").oninput=e=>{filtroTexto=e.target.value; const s=e.target.selectionStart;
     pinta(); const n=$("busca"); n.focus(); n.setSelectionRange(s,s)};
   $("selArea").onchange=e=>{filtroArea=e.target.value; pinta()};
   $("verH").onclick=()=>{verHechas=!verHechas; pinta()};
   $("recargar").onclick=carga;
+  [...document.querySelectorAll("[data-col]")].forEach(th=>th.onclick=()=>{
+    if(orden===th.dataset.col)asc=!asc; else {orden=th.dataset.col; asc=true}
+    pinta();
+  });
 }
 
 $("cuerpo").addEventListener("click",async e=>{
+  const fila=e.target.closest("[data-fila]");
+  if(fila && !e.target.closest("a,button,textarea")){
+    abierta = abierta===fila.dataset.fila ? null : fila.dataset.fila;
+    pinta(); return;
+  }
   const h=e.target.closest("[data-hecho]"), b=e.target.closest("[data-borra]");
   if(h){
     const f=FICHAS.find(x=>x.id===h.dataset.hecho);
