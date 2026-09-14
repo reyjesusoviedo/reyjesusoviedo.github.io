@@ -90,13 +90,13 @@ input.mal{border-color:#a8352e}
     <b>Qué pasa con tus respuestas</b>
     <p>Este cuestionario <b>no guarda nada en internet</b>. Lo que escribes se queda en tu móvil mientras lo rellenas.</p>
     <p>Al terminar se crea un informe en PDF que <b>tú envías</b> por WhatsApp a la persona responsable. Solo ella lo va a leer, y lo borra una vez estudiado.</p>
-    <p>De datos personales solo se recogen <b>tu nombre y tu teléfono</b>, y el teléfono puedes dejarlo en blanco. Nada es obligatorio: si una pregunta no te encaja, sáltala.</p>
+    <p>De datos personales solo se recogen <b>tu nombre y tu teléfono</b>, que hacen falta para poder contactar contigo. El resto de preguntas puedes saltarlas si no te encajan.</p>
     <button class="mas" id="verMas" aria-expanded="false">Ver el detalle</button>
     <div class="detalle" id="detalle" hidden>
       <p><b>Quién trata los datos.</b> La iglesia El Rey Jesús Oviedo, del Ministerio Internacional
         Gloria Revelada, Calle Jardín 12, La Corredoria, 33011 Oviedo.</p>
-      <p><b>Qué datos.</b> Solo nombre y apellidos y, si quieres darlo, el teléfono. El resto de
-        respuestas son sobre tus dones y tu disponibilidad, no te identifican por sí solas.</p>
+      <p><b>Qué datos.</b> Nombre y apellidos y teléfono. El resto de respuestas son sobre tus
+        dones y tu disponibilidad.</p>
       <p><b>Para qué.</b> Únicamente para acompañarte y ayudarte a encontrar dónde servir.</p>
       <p><b>Quién los ve.</b> Una sola persona responsable. No se ceden a nadie ni se publican.</p>
       <p><b>Cuánto tiempo.</b> Se borran una vez estudiados.</p>
@@ -320,8 +320,8 @@ const SEDES=["Oviedo","Gijón","Sama","Cangas de Onís","Todavía no lo sé"];
 
 const PREGUNTAS=[
  {id:"nombre",t:"¿Cómo te llamas?",tipo:"texto",ph:"Nombre y apellidos",req:true},
- {id:"tel",t:"¿Y tu teléfono?",tipo:"tel",ph:"600 123 456",
-  ayuda:"Para poder responderte. Si prefieres no darlo, déjalo en blanco."},
+ {id:"tel",t:"¿Y tu teléfono?",tipo:"tel",ph:"600 123 456",req:true,
+  ayuda:"Lo necesitamos para poder contactar contigo."},
  {id:"sede",t:"¿A qué centro vienes?",tipo:"una",ops:SEDES},
  {id:"tiempo",t:"¿Cuánto llevas viniendo?",tipo:"una",
   ops:["Es mi primera vez o casi","Menos de seis meses","Entre seis meses y dos años","Más de dos años"]},
