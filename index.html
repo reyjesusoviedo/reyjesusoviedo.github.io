@@ -522,7 +522,7 @@ const DATOS={
      ]},
     {"id":"e4","titulo":"Retiro de sanidad interior y liberación","desde":"2026-09-19","hasta":"",
      "hora":"9:00","sede":"Oviedo","quien":"",
-     "cartel":"evento-retiro-sanidad.jpg","frase":"Dios tiene algo para ti ese día","tel":"","telNombre":"","oculto":false,"texto":"Un día completo. Calle Jardín 12, La Corredoria."}
+     "cartel":"evento-retiro-sanidad.jpg","frase":"Dios tiene algo para ti ese día","pagina":"retiro.html","aporte":"Donativo de 10 € · comida incluida","tel":"","telNombre":"","oculto":false,"texto":"Un día completo. Calle Jardín 12, La Corredoria."}
   ],
   "sedes":[
     {"n":"Oviedo","pri":true,"dir":"Calle Jardín 12, La Corredoria, 33011 Oviedo","tel":"629793800",
@@ -696,7 +696,7 @@ function pintaEventos(){
         '<p class="fecha">'+esc(fechaTxt(e))+(e.sede?" · "+esc(e.sede):"")+'</p>'+
         (e.aporte?'<p class="aporte">'+esc(e.aporte)+'</p>':'')+
         (e.texto?'<p class="txt">'+esc(e.texto)+'</p>':'')+
-        '<div class="bts"><a class="pri" href="evento.html?e='+encodeURIComponent(e.id)+'">Más información</a>'+
+        '<div class="bts"><a class="pri" href="'+(e.pagina?esc(e.pagina):'evento.html?e='+encodeURIComponent(e.id))+'">Más información</a>'+
         '<button onclick="preguntaEvento(\''+e.id+'\')">Quiero ir</button></div>'+
       '</div></article>'}).join("")+'</div>'+
     (fs.length>1?'<div class="pastnav" id="evPuntos">'+fs.map((e,i)=>
@@ -1046,6 +1046,7 @@ function pintaEdEventos(){
     '<label>Texto</label><input type="text" id="ev_x'+i+'" value="'+esc(e.texto||"")+'">'+
     '<label>Quién participa</label><input type="text" id="ev_q'+i+'" value="'+esc(e.quien||"")+'">'+
     '<label>Cartel, nombre del archivo</label><input type="text" id="ev_c'+i+'" value="'+esc(e.cartel||"")+'" placeholder="evento-2.jpg">'+
+    '<label>Página propia, si la tiene</label><input type="text" id="ev_pg'+i+'" value="'+esc(e.pagina||"")+'" placeholder="retiro.html">'+
     '<button class="edborra" data-borra="'+i+'">Borrar este evento</button>'+
     '</div>').join("")||'<p style="font-size:13.5px;color:#7d97a8">No hay eventos.</p>';
 }
@@ -1084,6 +1085,7 @@ function recoge(){
     e.telNombre=$("ev_tn"+i)?$("ev_tn"+i).value.trim():(e.telNombre||"");
     e.oculto=$("ev_p"+i)?!$("ev_p"+i).checked:!!e.oculto;
     e.cartel=$("ev_c"+i).value.trim();
+    e.pagina=$("ev_pg"+i)?$("ev_pg"+i).value.trim():(e.pagina||"");
   });
   DATOS.eventos=(DATOS.eventos||[]).filter(e=>e.titulo&&e.desde);
   DATOS.sedes.forEach((s,i)=>{
