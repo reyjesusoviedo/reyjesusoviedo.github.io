@@ -143,6 +143,7 @@ button{font:inherit;cursor:pointer}
 .ancha2{max-width:1180px;margin:0 auto;padding:40px 22px 0}
 .evzona{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);gap:26px;align-items:start}
 @media(max-width:1000px){.evzona{grid-template-columns:1fr;gap:22px}}
+.evcol{min-width:0}
 .evcab{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
 .evcab h3{font-size:clamp(24px,2.7vw,30px);font-weight:700;color:var(--deep);margin:0;flex:1;letter-spacing:-.01em}
 .evtodos{font-size:13.5px;color:var(--blue);text-decoration:none;font-weight:500;white-space:nowrap}
@@ -407,12 +408,10 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 </header>
 
 <div class="accesos">
-  <a href="#semana"><i>◷</i><div><b>Próxima reunión</b><span id="accProx">Consulta los horarios</span></div><em>Ver más →</em></a>
+  <a href="#" id="accHorarios"><i>◷</i><div><b>Próxima reunión</b><span id="accProx">Consulta los horarios</span></div><em>Ver más →</em></a>
   <a href="#" id="accDonde"><i>◉</i><div><b>Cómo llegar</b><span>Oviedo, Asturias</span></div><em>Ver ubicación →</em></a>
   <a href="#" data-pronto="El directo"><i>▷</i><div><b>También online</b><span>Únete desde cualquier lugar</span></div><em>Ver en directo →</em></a>
 </div>
-
-<section id="semana" class="ancha" hidden></section>
 
 <section id="destacado" class="ancha2" hidden></section>
 
@@ -561,7 +560,7 @@ const DATOS={
     "opciones":[
       {"q":"¿Cuándo os reunís?",
        "r":"Nos reunimos cada semana. En la sección de horarios verás los días y las horas de cada sede.",
-       "ir":"#semana","irTxt":"Ver los horarios"},
+       "accion":"centros","irTxt":"Ver los horarios"},
       {"q":"¿Dónde estáis?",
        "r":"La iglesia está en Oviedo, en Calle Jardín 12, y tenemos Centros de Gloria en Gijón, Sama de Langreo y Cangas de Onís.",
        "accion":"centros","irTxt":"Ver los centros"},
@@ -757,6 +756,8 @@ function ventanaCentros(){
 (function(){
   const a=document.getElementById("accDonde");
   if(a)a.onclick=e=>{ e.preventDefault(); ventanaCentros() };
+  const b=document.getElementById("accHorarios");
+  if(b)b.onclick=e=>{ e.preventDefault(); ventanaCentros() };
 })();
 function pintaMinisterios(){
   const m=DATOS.ministerios||[];
@@ -833,7 +834,7 @@ function pintaEventos(){
   dest.innerHTML='<div class="evzona">'+
     '<div class="evcol">'+
       '<div class="evcab"><h3>Próximos eventos</h3>'+
-        '<a class="evtodos" href="#semana">Ver todos los eventos <i>→</i></a></div>'+
+        '<a class="evtodos" href="#agenda">Ver todos los eventos <i>→</i></a></div>'+
       '<div class="evrej">'+tarjetas+'</div>'+
     '</div>'+
     '<div class="idcol">'+
@@ -883,50 +884,8 @@ function pinta(){
   $("galeria").innerHTML=Array.from({length:8},(_,i)=>
     '<figure class="foto"><img src="foto-'+(i+1)+'.jpg" alt="" loading="lazy" '+
     'onerror="this.parentNode.remove()"></figure>').join("");
-  pintaSemana(); pintaProxima(); pintaEventos(); pintaMinisterios(); pintaDonativos();
+  pintaProxima(); pintaEventos(); pintaMinisterios(); pintaDonativos();
   pintaAsistente(); fotoPastores();
-}
-let sedeSem=0;
-function pintaSemana(){
-  const s=SEDES[sedeSem]||SEDES[0];
-  const sec=$("semana");
-  if(!SEDES.length){sec.hidden=true;return}
-  sec.hidden=false;
-  const hoy=new Date().getDay();
-  const tarjetas=(s.hor||[]).map(h=>{
-    const m=String(h[1]).match(/([A-Za-zÁÉÍÓÚáéíóú]+)\s+([0-9]{1,2}[:.][0-9]{2})/);
-    const d=m?DIAS.indexOf(sinTilde(m[1])):-1;
-    const esHoy=d===hoy;
-    const cart=!!h[2];
-    return '<article class="hcard'+(esHoy?" hoy":"")+(cart?" concartel":"")+'">'+
-      (cart?'<img src="'+esc(h[2])+'" alt="Cartel de '+esc(h[0])+'" loading="lazy" onerror="this.remove()">':'')+
-      '<div class="velo"></div>'+
-      '<div class="txt">'+
-        (esHoy?'<span class="hoyb">hoy</span>':'')+
-        (cart
-          ? '<div class="pie2"><span class="dh">'+esc(m?DIASV[d]:h[1])+' · '+
-              esc(m?m[2].replace(".",":"):"")+'</span>'+
-            '<span class="donde">'+esc(s.n)+(s.dir?" · "+esc(s.dir):"")+'</span></div>'
-          : '<div class="dia">'+esc(m?DIASV[d]:h[1])+'</div>'+
-            '<div class="hh2">'+esc(m?m[2].replace(".",":"):"")+'</div>'+
-            '<div class="que">'+esc(h[0])+'</div>'+
-            '<div class="donde">'+esc(s.n)+(s.dir?" · "+esc(s.dir):"")+'</div>')+
-      '</div></article>';
-  }).join("");
-  sec.innerHTML='<div class="franja"><div class="dentro">'+
-    '<div class="cab"><div class="et">Cada semana</div><h2>Nos reunimos aquí</h2></div>'+
-    (tarjetas?"":'<p class="sinhoras">Todavía no hemos publicado los horarios de '+esc(s.n)+
-      '. Escríbenos y te los decimos.</p>')+
-    '<div class="horas'+(tarjetas?"":" sola")+'">'+tarjetas+
-      '<button class="hcard cta" onclick="preguntaSede(\''+esc(s.n).replace(/'/g,"")+'\')">'+
-      '<b>¿Vienes?</b><span>Escríbenos y te esperamos</span></button></div>'+
-    '<div class="pastillas" id="pastSedes">'+SEDES.map((x,i)=>
-      '<button data-ss="'+i+'"'+(i===sedeSem?' aria-current="true"':'')+'>'+esc(x.n)+'</button>').join("")+
-    '</div></div></div>';
-  $("pastSedes").onclick=e=>{
-    const b=e.target.closest("[data-ss]"); if(!b)return;
-    sedeSem=+b.dataset.ss; pintaSemana();
-  };
 }
 function preguntaSede(n){
   const s=SEDES.find(x=>x.n===n)||{};
