@@ -140,6 +140,12 @@ button{font:inherit;cursor:pointer}
 .pastn{font-weight:600;font-size:18px;color:var(--navy)}
 .pastc{color:var(--muted);font-size:15px}
 
+section{max-width:1180px;margin:0 auto;padding:44px 22px 0}
+section h2{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);
+  font-weight:600;margin:0 0 6px}
+section h3{font-size:clamp(24px,2.7vw,30px);font-weight:700;color:var(--deep);margin:0 0 12px;
+  line-height:1.15;letter-spacing:-.01em}
+section>p{font-size:15.5px;color:#4a627e;margin:0 0 14px;max-width:760px;line-height:1.6}
 .ancha2{max-width:1180px;margin:0 auto;padding:40px 22px 0}
 .evzona{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);gap:26px;align-items:start}
 @media(max-width:1000px){.evzona{grid-template-columns:1fr;gap:22px}}
@@ -238,7 +244,8 @@ button{font:inherit;cursor:pointer}
 .chor span{color:var(--muted);white-space:nowrap}
 .cdir{font-size:13.5px;color:var(--muted);margin-top:8px;padding-top:8px;
   border-top:1px solid var(--line)}
-.cdir a{color:var(--blue);text-decoration:none;white-space:nowrap}
+.cmapa{display:inline-block;margin-top:9px;background:var(--blue);color:#fff;text-decoration:none;
+  border-radius:99px;padding:8px 16px;font-size:13px;font-weight:600}
 .mins{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-top:20px}
 .min{border:1px solid var(--line);border-radius:15px;padding:16px 17px;background:#fff;
   text-align:left;font:inherit;cursor:pointer;transition:.18s}
@@ -387,7 +394,6 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   </div>
   <div class="accs">
     <a class="bl" href="#" data-pronto="El directo"><span class="ic">▶</span>Ver en directo</a>
-    <a class="bp" href="#visita"><span class="ic">▤</span>Planifica tu visita</a>
   </div>
   <button class="rayas" id="rayas" aria-label="Menú" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
@@ -397,7 +403,7 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
     <h1 id="tTitular"></h1>
     <p class="lema" id="tVision"></p>
     <div class="cta">
-      <a class="pri" href="#visita"><span class="ic">◉</span>Quiero visitarlos</a>
+      <a class="pri" href="#contacto"><span class="ic">◉</span>Quiero visitarlos</a>
       <a href="#quienes">Conócenos</a>
     </div>
     <div class="etiq">
@@ -409,7 +415,6 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 
 <div class="accesos">
   <a href="#" id="accHorarios"><i>◷</i><div><b>Próxima reunión</b><span id="accProx">Consulta los horarios</span></div><em>Ver más →</em></a>
-  <a href="#" id="accDonde"><i>◉</i><div><b>Cómo llegar</b><span>Oviedo, Asturias</span></div><em>Ver ubicación →</em></a>
   <a href="#" data-pronto="El directo"><i>▷</i><div><b>También online</b><span>Únete desde cualquier lugar</span></div><em>Ver en directo →</em></a>
 </div>
 
@@ -441,13 +446,6 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   <div class="mins" id="mins"></div>
 </section>
 
-<section id="esperar">
-  <h2>Tu primera visita</h2>
-  <h3 id="tEsperarTit"></h3>
-  <p id="tEsperar1"></p>
-  <p id="tEsperar2"></p>
-</section>
-
 <section id="donativos" hidden>
   <h2>Colabora</h2>
   <h3 id="dTitulo"></h3>
@@ -464,7 +462,7 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
       <span>Te ayudamos a saber qué esperar y a sentirte en casa desde el primer momento.</span>
     </div>
     <div class="vbt">
-      <a class="pri" href="#esperar">Planificar mi visita</a>
+      <a class="pri" href="#contacto">Planificar mi visita</a>
       <a href="#contacto">Hablar con alguien</a>
     </div>
   </div>
@@ -566,7 +564,7 @@ const DATOS={
        "accion":"centros","irTxt":"Ver los centros"},
       {"q":"Quiero venir por primera vez",
        "r":"Nos alegra mucho. No hace falta avisar ni traer nada: ven y siéntate donde quieras. Siempre hay alguien en la puerta para orientarte.",
-       "ir":"#esperar","irTxt":"Qué me voy a encontrar",
+       
        "wa":"Hola, me gustaría ir por primera vez. ¿Me orientáis?"},
       {"q":"Necesito oración",
        "r":"Estamos para eso. Escríbenos y oramos por ti. No hace falta que cuentes más de lo que quieras.",
@@ -744,9 +742,9 @@ function ventanaCentros(){
         (s.pri?' <span class="cpri">iglesia</span>':'')+'</div>'+
       (s.hor&&s.hor.length?'<div class="chor">'+s.hor.map(x=>
         '<div><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join("")+'</div>':'')+
-      (s.dir?'<div class="cdir">'+esc(s.dir)+
-        ' <a href="https://maps.google.com/?q='+encodeURIComponent(s.dir)+
-        '" target="_blank" rel="noopener">Ver en el mapa</a></div>'
+      (s.dir?'<div class="cdir">'+esc(s.dir)+'</div>'+
+        '<a class="cmapa" href="https://maps.google.com/?q='+encodeURIComponent(s.dir)+
+        '" target="_blank" rel="noopener">Abrir en Maps</a>'
        :'<div class="cdir">Escríbenos y te decimos la dirección</div>')+
     '</div>').join("");
   abre('<h4>Dónde nos reunimos</h4>'+
@@ -754,8 +752,6 @@ function ventanaCentros(){
     '<p style="margin:14px 0 0"><a href="#contacto" onclick="cierra()">¿Dudas? Escríbenos</a></p>');
 }
 (function(){
-  const a=document.getElementById("accDonde");
-  if(a)a.onclick=e=>{ e.preventDefault(); ventanaCentros() };
   const b=document.getElementById("accHorarios");
   if(b)b.onclick=e=>{ e.preventDefault(); ventanaCentros() };
 })();
@@ -870,9 +866,6 @@ function pinta(){
   $("tVision").textContent=DATOS.vision;
   $("tQuienesTit").textContent=DATOS.quienesTit;
   $("tQuienes").textContent=DATOS.quienes;
-  $("tEsperarTit").textContent=DATOS.esperarTit;
-  $("tEsperar1").textContent=DATOS.esperar1||"";
-  $("tEsperar2").textContent=DATOS.esperar2||"";
   $("tContactoIntro").textContent=DATOS.contactoIntro||"";
   const t=((SEDES.find(s=>s.pri)||{}).tel||DATOS.tel||"").replace(/[^0-9]/g,"");
   $("tPie").textContent=DATOS.direccion+" · "+t;
@@ -884,6 +877,8 @@ function pinta(){
   $("galeria").innerHTML=Array.from({length:8},(_,i)=>
     '<figure class="foto"><img src="foto-'+(i+1)+'.jpg" alt="" loading="lazy" '+
     'onerror="this.parentNode.remove()"></figure>').join("");
+  const sel=$("fS");
+  if(sel)sel.innerHTML=SEDES.map(s=>'<option value="'+esc(s.n)+'">'+esc(s.n)+'</option>').join("");
   pintaProxima(); pintaEventos(); pintaMinisterios(); pintaDonativos();
   pintaAsistente(); fotoPastores();
 }

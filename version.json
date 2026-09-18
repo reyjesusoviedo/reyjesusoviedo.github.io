@@ -2,7 +2,7 @@
   "app": "1.4",
   "cafeteria": "1.3",
   "fecha": "2026-09-06",
-  "novedades": "Horarios y centros se consultan desde los accesos de arriba; la página queda más corta y limpia.",
-  "web": "3.2",
+  "novedades": "Web más limpia: todo al mismo ancho, centros con botón de mapa, sin secciones duplicadas.",
+  "web": "3.3",
   "dones": "2.3"
 }
