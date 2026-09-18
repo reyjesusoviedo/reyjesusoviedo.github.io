@@ -190,31 +190,17 @@ button{font:inherit;cursor:pointer}
 .idbt{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;
   text-decoration:none;border-radius:99px;padding:13px 26px;font-size:15px;font-weight:600}
 @media(max-width:620px){.idvals{grid-template-columns:1fr}}
-.sdcar{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
-  padding:10px calc(50% - 172px) 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-@media(min-width:900px){
-  .sdcar{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:14px;overflow:visible;padding:10px 0 4px}
-  .sdc{width:auto;opacity:1;transform:none}
-  .sdc.foco{transform:none}
-  .solomovil{display:none}
-}
-.sdcar::-webkit-scrollbar{display:none}
-.sdc{flex:none;width:344px;scroll-snap-align:center;background:#fff;
-  border:1px solid var(--line);border-radius:18px;overflow:hidden;
-  opacity:.55;transform:scale(.94);transition:opacity .35s,transform .35s}
-.sdc.foco{opacity:1;transform:scale(1);border-color:var(--blue-l)}
-.sdc img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover}
-.sdc .cuerpo{padding:16px 18px 18px}
-.sdc .et{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
-.sdc h4{font-size:23px;font-weight:600;color:var(--navy);margin:3px 0 4px;line-height:1.15}
-.sdc .dir{font-size:14px;color:var(--muted);margin:0 0 10px}
-.sdc .hors{border-top:1px solid var(--line);padding-top:8px}
-.sdc .bts{display:flex;gap:8px;margin-top:14px}
-.sdc .bts a,.sdc .bts button{flex:1;text-align:center;text-decoration:none;font-size:14px;
-  border:1px solid var(--line2);background:#fff;color:var(--navy);border-radius:10px;
-  padding:11px 8px;cursor:pointer;font-weight:500}
-.sdc .bts button{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+
+
+
+
+
+
+
+
+
+
 .sede{border:1px solid var(--line);border-radius:14px;padding:16px 18px}
 .sede.pri{border-color:var(--blue-l);background:var(--ice2)}
 .sede h4{font-size:19px;font-weight:600;color:var(--navy);margin:0 0 2px}
@@ -240,6 +226,18 @@ button{font:inherit;cursor:pointer}
   padding:12px;font-size:14.5px;font-weight:500;cursor:pointer;font-family:inherit}
 .don a.bpago{background:var(--blue);color:#fff;border-color:var(--blue)}
 .dnota{font-size:13.5px;color:var(--muted);margin-top:16px}
+.cens{display:grid;gap:10px;margin-top:4px}
+.cen{border:1px solid var(--line);border-radius:13px;padding:13px 15px;background:var(--ice2)}
+.cnom{font-size:17px;font-weight:600;color:var(--deep)}
+.cpri{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);
+  font-weight:500;vertical-align:1px}
+.chor{margin:7px 0 0}
+.chor div{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:2px 0}
+.chor b{font-weight:500;color:var(--ink)}
+.chor span{color:var(--muted);white-space:nowrap}
+.cdir{font-size:13.5px;color:var(--muted);margin-top:8px;padding-top:8px;
+  border-top:1px solid var(--line)}
+.cdir a{color:var(--blue);text-decoration:none;white-space:nowrap}
 .mins{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-top:20px}
 .min{border:1px solid var(--line);border-radius:15px;padding:16px 17px;background:#fff;
   text-align:left;font:inherit;cursor:pointer;transition:.18s}
@@ -410,7 +408,7 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
 
 <div class="accesos">
   <a href="#semana"><i>◷</i><div><b>Próxima reunión</b><span id="accProx">Consulta los horarios</span></div><em>Ver más →</em></a>
-  <a href="#donde"><i>◉</i><div><b>Cómo llegar</b><span>Oviedo, Asturias</span></div><em>Ver ubicación →</em></a>
+  <a href="#" id="accDonde"><i>◉</i><div><b>Cómo llegar</b><span>Oviedo, Asturias</span></div><em>Ver ubicación →</em></a>
   <a href="#" data-pronto="El directo"><i>▷</i><div><b>También online</b><span>Únete desde cualquier lugar</span></div><em>Ver en directo →</em></a>
 </div>
 
@@ -435,13 +433,6 @@ input,select{width:100%;border:1px solid var(--line2);border-radius:11px;
   <h2 style="margin-top:32px">Nuestros pastores</h2>
   <p><span class="pastn" id="tPastores"></span><br><span class="pastc" id="tPastoresPie"></span></p>
   <img class="past" id="pastImg" src="pastores-foto.jpg" alt="Pastores de la iglesia">
-</section>
-
-<section id="donde">
-  <h2>Dónde estamos</h2>
-  <h3 id="tDondeTit"></h3>
-  <p id="tDondeIntro"></p>
-  <div class="sedes" id="sedes"></div>
 </section>
 
 <section id="ministerios">
@@ -573,7 +564,7 @@ const DATOS={
        "ir":"#semana","irTxt":"Ver los horarios"},
       {"q":"¿Dónde estáis?",
        "r":"La iglesia está en Oviedo, en Calle Jardín 12, y tenemos Centros de Gloria en Gijón, Sama de Langreo y Cangas de Onís.",
-       "ir":"#donde","irTxt":"Ver los centros"},
+       "accion":"centros","irTxt":"Ver los centros"},
       {"q":"Quiero venir por primera vez",
        "r":"Nos alegra mucho. No hace falta avisar ni traer nada: ven y siéntate donde quieras. Siempre hay alguien en la puerta para orientarte.",
        "ir":"#esperar","irTxt":"Qué me voy a encontrar",
@@ -723,7 +714,9 @@ function accionAsistente(a){
   const o=DATOS.asistente.opciones[a];
   const tel=((DATOS.sedes.find(s=>s.pri)||{}).tel||DATOS.tel||"").replace(/[^0-9]/g,"");
   let bts="";
-  if(o.ir)bts+='<a class="acc pri" href="'+esc(o.ir)+'" onclick="cierraAsistente()">'+esc(o.irTxt||"Verlo")+'</a>';
+  if(o.accion==="centros")bts+='<button class="acc pri" onclick="cierraAsistente();ventanaCentros()">'+
+    esc(o.irTxt||"Verlo")+'</button>';
+  else if(o.ir)bts+='<a class="acc pri" href="'+esc(o.ir)+'" onclick="cierraAsistente()">'+esc(o.irTxt||"Verlo")+'</a>';
   if(o.wa)bts+='<a class="acc'+(o.ir?"":" pri")+'" target="_blank" rel="noopener" href="https://wa.me/34'+
     tel+'?text='+encodeURIComponent(o.wa)+'">Escribir por WhatsApp</a>';
   $("asisCuerpo").innerHTML='<div class="resp"><p>'+esc(o.r)+'</p>'+
@@ -745,6 +738,26 @@ function accionAsistente(a){
   if(!cerrado)setTimeout(()=>{ if(!$("asis").classList.contains("on"))abreAsistente() },30000);
 })();
 
+function ventanaCentros(){
+  const filas=SEDES.map(s=>
+    '<div class="cen">'+
+      '<div class="cnom">'+esc(s.n)+
+        (s.pri?' <span class="cpri">iglesia</span>':'')+'</div>'+
+      (s.hor&&s.hor.length?'<div class="chor">'+s.hor.map(x=>
+        '<div><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join("")+'</div>':'')+
+      (s.dir?'<div class="cdir">'+esc(s.dir)+
+        ' <a href="https://maps.google.com/?q='+encodeURIComponent(s.dir)+
+        '" target="_blank" rel="noopener">Ver en el mapa</a></div>'
+       :'<div class="cdir">Escríbenos y te decimos la dirección</div>')+
+    '</div>').join("");
+  abre('<h4>Dónde nos reunimos</h4>'+
+    '<div class="cens">'+filas+'</div>'+
+    '<p style="margin:14px 0 0"><a href="#contacto" onclick="cierra()">¿Dudas? Escríbenos</a></p>');
+}
+(function(){
+  const a=document.getElementById("accDonde");
+  if(a)a.onclick=e=>{ e.preventDefault(); ventanaCentros() };
+})();
 function pintaMinisterios(){
   const m=DATOS.ministerios||[];
   const c=$("mins"); if(!c)return;
@@ -856,8 +869,6 @@ function pinta(){
   $("tVision").textContent=DATOS.vision;
   $("tQuienesTit").textContent=DATOS.quienesTit;
   $("tQuienes").textContent=DATOS.quienes;
-  $("tDondeTit").textContent=DATOS.dondeTit;
-  $("tDondeIntro").textContent=DATOS.dondeIntro;
   $("tEsperarTit").textContent=DATOS.esperarTit;
   $("tEsperar1").textContent=DATOS.esperar1||"";
   $("tEsperar2").textContent=DATOS.esperar2||"";
@@ -872,7 +883,7 @@ function pinta(){
   $("galeria").innerHTML=Array.from({length:8},(_,i)=>
     '<figure class="foto"><img src="foto-'+(i+1)+'.jpg" alt="" loading="lazy" '+
     'onerror="this.parentNode.remove()"></figure>').join("");
-  pintaSemana(); pintaSedes(); pintaProxima(); pintaEventos(); pintaMinisterios(); pintaDonativos();
+  pintaSemana(); pintaProxima(); pintaEventos(); pintaMinisterios(); pintaDonativos();
   pintaAsistente(); fotoPastores();
 }
 let sedeSem=0;
@@ -916,41 +927,6 @@ function pintaSemana(){
     const b=e.target.closest("[data-ss]"); if(!b)return;
     sedeSem=+b.dataset.ss; pintaSemana();
   };
-}
-function pintaSedes(){
-  $("sedes").innerHTML='<div class="sdcar" id="sdcar">'+SEDES.map((s,i)=>
-    '<article class="sdc'+(i===0?" foco":"")+'">'+
-      (s.img?'<img src="'+esc(s.img)+'" alt="'+esc(s.n)+'" loading="'+(i<2?"eager":"lazy")+'" onerror="this.remove()">':'')+
-      '<div class="cuerpo">'+
-        '<div class="et">'+(s.pri?"Iglesia":"Centro de Gloria")+'</div>'+
-        '<h4>'+esc(s.n)+'</h4>'+
-        '<p class="dir">'+(s.dir?esc(s.dir):"Escríbenos y te decimos la dirección")+'</p>'+
-        (s.hor.length?'<div class="hors">'+s.hor.map(x=>
-          '<div class="hh"><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>').join("")+'</div>':'')+
-        '<div class="bts">'+
-          (s.dir?'<a href="https://maps.google.com/?q='+encodeURIComponent(s.dir)+
-            '" target="_blank" rel="noopener">Cómo llegar</a>':'')+
-          '<button onclick="preguntaSede(\''+esc(s.n).replace(/'/g,"")+'\')">Escríbenos</button>'+
-        '</div>'+
-      '</div></article>').join("")+'</div>'+
-    '<div class="pastnav solomovil" id="sdPuntos">'+SEDES.map((s,i)=>
-      '<button'+(i?'':' aria-current="true"')+' data-s="'+i+'">'+esc(s.n)+'</button>').join("")+'</div>';
-  const car=$("sdcar"), pt=$("sdPuntos");
-  const marca=()=>{
-    let mejor=0,dmin=1e9;
-    const c=car.scrollLeft+car.clientWidth/2;
-    [...car.children].forEach((x,i)=>{
-      const m2=x.offsetLeft+x.offsetWidth/2, dd=Math.abs(m2-c);
-      if(dd<dmin){dmin=dd;mejor=i}});
-    [...car.children].forEach((x,i)=>x.classList.toggle("foco",i===mejor));
-    [...pt.children].forEach((b,i)=>i===mejor?b.setAttribute("aria-current","true"):b.removeAttribute("aria-current"));
-  };
-  car.addEventListener("scroll",marca,{passive:true});
-  pt.onclick=ev=>{const b=ev.target.closest("[data-s]"); if(!b)return;
-    const c=car.children[+b.dataset.s];
-    car.scrollTo({left:c.offsetLeft-(car.clientWidth-c.offsetWidth)/2,behavior:"smooth"})};
-  setTimeout(marca,60);
-  $("fS").innerHTML=SEDES.map(s=>'<option value="'+esc(s.n)+'">'+esc(s.n)+'</option>').join("");
 }
 function preguntaSede(n){
   const s=SEDES.find(x=>x.n===n)||{};
