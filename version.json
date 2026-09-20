@@ -2,7 +2,7 @@
   "app": "1.4",
   "cafeteria": "1.3",
   "fecha": "2026-09-06",
-  "novedades": "Web más limpia: todo al mismo ancho, centros con botón de mapa, sin secciones duplicadas.",
+  "novedades": "Fichas de dones: exportar a PDF una ficha o varias a la vez.",
   "web": "3.4",
-  "dones": "2.3"
+  "dones": "2.4"
 }
